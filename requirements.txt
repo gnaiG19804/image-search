@@ -1,9 +1,24 @@
+# Core AI/Deep Learning
 torch>=2.0.0
 torchvision>=0.15.0
 transformers>=4.30.0
+numpy>=1.24.0
 pillow>=10.0.0
-faiss-cpu>=1.7.4
+
+# CLIP Model (OpenAI)
 ftfy
 regex
+git+https://github.com/openai/CLIP.git
+
+# Production Database (PostgreSQL)
+psycopg2-binary>=2.9.9
+pgvector>=0.2.4
+
+# Legacy/POC (ChromaDB & FAISS)
+chromadb==1.4.0
+faiss-cpu>=1.7.4
+
+# Utilities
 tqdm
-numpy>=1.24.0
+filelock
+typing-extensions
