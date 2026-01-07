@@ -1,0 +1,58 @@
+{
+    "title": "Etsy Marketplace Clone",
+    "repo_url": "https://github.com/etsy/marketplace-platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "ecommerce",
+    "platform": [
+        "web",
+        "mobile"
+    ],
+    "frontend": [
+        "React",
+        "Redux"
+    ],
+    "backend": [
+        "Node.js",
+        "GraphQL"
+    ],
+    "database": [
+        "PostgreSQL",
+        "Elasticsearch"
+    ],
+    "deployment": [
+        "AWS",
+        "Kubernetes"
+    ],
+    "estimate": {
+        "days": 120,
+        "complexity": "high"
+    },
+    "team_size": 8,
+    "tags": [
+        "ecommerce",
+        "handmade",
+        "marketplace",
+        "crafts",
+        "seller-tools"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Global marketplace connecting independent artisans and crafters with buyers seeking unique handmade goods. Features custom shop management, inventory tracking, and direct messaging between sellers and customers."
+        },
+        {
+            "type": "tech_stack",
+            "content": "React with Redux for state management in seller dashboard. Node.js/GraphQL API for flexible product queries. PostgreSQL for transactional data, Elasticsearch for product search across millions of listings."
+        }
+    ],
+    "assets": {
+        "readme": "Microservices architecture with separate services for shops, orders, and search.",
+        "folder_structure": [
+            "services/shop-management",
+            "services/search-engine",
+            "services/payments"
+        ]
+    },
+    "project_id": "project_016_etsy"
+}

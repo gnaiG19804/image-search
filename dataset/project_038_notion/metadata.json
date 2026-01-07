@@ -1,0 +1,57 @@
+{
+    "title": "Notion All-in-One Workspace",
+    "repo_url": "https://github.com/notion/platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "productivity",
+    "platform": [
+        "web",
+        "mobile"
+    ],
+    "frontend": [
+        "React",
+        "React Native"
+    ],
+    "backend": [
+        "Go",
+        "Node.js"
+    ],
+    "database": [
+        "PostgreSQL",
+        "S3"
+    ],
+    "deployment": [
+        "AWS",
+        "Docker"
+    ],
+    "estimate": {
+        "days": 160,
+        "complexity": "high"
+    },
+    "team_size": 20,
+    "tags": [
+        "productivity",
+        "notes",
+        "wiki",
+        "databases",
+        "collaboration"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "All-in-one workspace combining notes, wikis, project management, and databases with blocks-based editor."
+        },
+        {
+            "type": "tech_stack",
+            "content": "React for web/desktop. Go for API performance. PostgreSQL for structured data, S3 for file storage."
+        }
+    ],
+    "assets": {
+        "readme": "See README.md",
+        "folder_structure": [
+            "src/",
+            "tests/"
+        ]
+    },
+    "project_id": "project_038_notion"
+}

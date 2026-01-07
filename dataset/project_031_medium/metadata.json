@@ -1,0 +1,57 @@
+{
+    "title": "Medium Blogging Platform",
+    "repo_url": "https://github.com/medium/platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "media",
+    "platform": [
+        "web",
+        "mobile"
+    ],
+    "frontend": [
+        "React",
+        "Next.js"
+    ],
+    "backend": [
+        "Node.js",
+        "Go"
+    ],
+    "database": [
+        "DynamoDB",
+        "Elasticsearch"
+    ],
+    "deployment": [
+        "AWS",
+        "Docker"
+    ],
+    "estimate": {
+        "days": 120,
+        "complexity": "medium"
+    },
+    "team_size": 14,
+    "tags": [
+        "blogging",
+        "publishing",
+        "writing",
+        "paywall",
+        "community"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Publishing platform for writers and readers featuring algorithmic content discovery, member-only stories, and creator monetization."
+        },
+        {
+            "type": "tech_stack",
+            "content": "React/Next.js for SSR. Node.js for API, Go for recommendation engine. DynamoDB for posts, Elasticsearch for search."
+        }
+    ],
+    "assets": {
+        "readme": "See README.md",
+        "folder_structure": [
+            "src/",
+            "tests/"
+        ]
+    },
+    "project_id": "project_031_medium"
+}

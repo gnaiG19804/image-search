@@ -1,17 +1,55 @@
 {
-  "project_id": "project_013",
-  "title": "Amazon",
-  "tech_stack": [
-    "React",
-    "Node.js",
-    "MongoDB"
-  ],
-  "estimate_days": 30,
-  "repo_url": "https://github.com/username/repo",
-  "tags": [
-    "web",
-    "mobile",
-    "ecommerce"
-  ],
-  "description": "Mô tả chi tiết về dự án"
+    "title": "Amazon Retail Clone",
+    "repo_url": "https://github.com/amazon/retail-platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "ecommerce",
+    "platform": [
+        "web",
+        "mobile"
+    ],
+    "frontend": [
+        "React",
+        "Next.js"
+    ],
+    "backend": [
+        "Java",
+        "Scala"
+    ],
+    "database": [
+        "DynamoDB",
+        "Aurora"
+    ],
+    "deployment": [
+        "AWS"
+    ],
+    "estimate": {
+        "days": 180,
+        "complexity": "high"
+    },
+    "team_size": 12,
+    "tags": [
+        "ecommerce",
+        "retail",
+        "marketplace",
+        "logistics"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Massive online retailer platform with diverse product categories, 1-click ordering, and prime delivery logistics integration. Handles millions of concurrent users."
+        },
+        {
+            "type": "tech_stack",
+            "content": "React/Next.js for SEO-optimized frontend. Java/Scala microservices for order processing. DynamoDB for cart/session data at scale."
+        }
+    ],
+    "assets": {
+        "readme": "Microservice architecture diagram.",
+        "folder_structure": [
+            "services/order",
+            "services/catalog"
+        ]
+    },
+    "project_id": "project_013_amazon"
 }

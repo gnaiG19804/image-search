@@ -61,7 +61,7 @@ def test_search(image_path, limit=5, tech_filter=None):
     db.close()
 
 if __name__ == "__main__":
-    default_img = "test/test_amazon.png"
+    default_img = "test\test_amazon.png"
     
     parser = argparse.ArgumentParser()
     parser.add_argument("--img", default=default_img, help="Path to query image")

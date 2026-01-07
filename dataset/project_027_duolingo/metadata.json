@@ -1,0 +1,57 @@
+{
+    "title": "Duolingo Language App",
+    "repo_url": "https://github.com/duolingo/platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "education",
+    "platform": [
+        "mobile",
+        "web"
+    ],
+    "frontend": [
+        "React",
+        "React Native"
+    ],
+    "backend": [
+        "Python",
+        "Flask"
+    ],
+    "database": [
+        "PostgreSQL",
+        "Redis"
+    ],
+    "deployment": [
+        "AWS",
+        "Docker"
+    ],
+    "estimate": {
+        "days": 90,
+        "complexity": "medium"
+    },
+    "team_size": 12,
+    "tags": [
+        "language-learning",
+        "gamification",
+        "adaptive-learning",
+        "mobile-first",
+        "streaks"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Gamified language learning app teaching 40+ languages through bite-sized lessons with adaptive paths and streak tracking."
+        },
+        {
+            "type": "tech_stack",
+            "content": "React Native for mobile. Python/Flask with ML for adaptive difficulty. Redis for leaderboards and streaks."
+        }
+    ],
+    "assets": {
+        "readme": "See README.md",
+        "folder_structure": [
+            "src/",
+            "tests/"
+        ]
+    },
+    "project_id": "project_027_duolingo"
+}

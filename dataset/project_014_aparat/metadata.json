@@ -1,17 +1,53 @@
 {
-  "project_id": "project_014",
-  "title": "aparat",
-  "tech_stack": [
-    "React",
-    "Node.js",
-    "MongoDB"
-  ],
-  "estimate_days": 30,
-  "repo_url": "https://github.com/username/repo",
-  "tags": [
-    "web",
-    "mobile",
-    "ecommerce"
-  ],
-  "description": "Mô tả chi tiết về dự án"
+    "title": "Aparat",
+    "repo_url": "https://github.com/aparat/video-platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "media",
+    "platform": [
+        "web"
+    ],
+    "frontend": [
+        "Vue.js"
+    ],
+    "backend": [
+        "PHP",
+        "Laravel"
+    ],
+    "database": [
+        "MySQL",
+        "Redis"
+    ],
+    "deployment": [
+        "Linux"
+    ],
+    "estimate": {
+        "days": 40,
+        "complexity": "medium"
+    },
+    "team_size": 3,
+    "tags": [
+        "video",
+        "sharing",
+        "streaming",
+        "community"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Iranian video sharing service providing user-generated content, localized search, and curated channels. A regional alternative to YouTube."
+        },
+        {
+            "type": "tech_stack",
+            "content": "Vue.js for a lightweight interactive frontend. PHP Laravel for rapid development of backend CRUD features. MySQL for relational user/video data."
+        }
+    ],
+    "assets": {
+        "readme": "Video upload config.",
+        "folder_structure": [
+            "app/Http/Controllers",
+            "resources/js"
+        ]
+    },
+    "project_id": "project_014_aparat"
 }

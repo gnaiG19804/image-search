@@ -23,5 +23,8 @@ index/*.json
 .DS_Store
 Thumbs.db
 
-*.md
+AI_AGENT_ROADMAP.md
+DATABASE_SCHEMA.md
 *.mermaid
+.env
+*.db

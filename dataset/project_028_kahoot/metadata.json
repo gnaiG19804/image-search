@@ -1,0 +1,57 @@
+{
+    "title": "Kahoot Quiz Platform",
+    "repo_url": "https://github.com/kahoot/platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "education",
+    "platform": [
+        "web",
+        "mobile"
+    ],
+    "frontend": [
+        "Vue.js",
+        "Nuxt.js"
+    ],
+    "backend": [
+        "Node.js",
+        "Express"
+    ],
+    "database": [
+        "MongoDB",
+        "Redis"
+    ],
+    "deployment": [
+        "AWS",
+        "Docker"
+    ],
+    "estimate": {
+        "days": 80,
+        "complexity": "medium"
+    },
+    "team_size": 8,
+    "tags": [
+        "quiz",
+        "gamification",
+        "classroom",
+        "real-time",
+        "interactive"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Interactive quiz and game-based learning platform for classrooms with real-time multiplayer quizzes."
+        },
+        {
+            "type": "tech_stack",
+            "content": "Vue.js/Nuxt.js for SPA. Node.js with Socket.io for real-time sessions. MongoDB for quizzes, Redis for state."
+        }
+    ],
+    "assets": {
+        "readme": "See README.md",
+        "folder_structure": [
+            "src/",
+            "tests/"
+        ]
+    },
+    "project_id": "project_028_kahoot"
+}

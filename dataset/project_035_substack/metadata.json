@@ -1,0 +1,56 @@
+{
+    "title": "Substack Newsletter Platform",
+    "repo_url": "https://github.com/substack/platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "media",
+    "platform": [
+        "web"
+    ],
+    "frontend": [
+        "React",
+        "Next.js"
+    ],
+    "backend": [
+        "Node.js",
+        "PostgreSQL"
+    ],
+    "database": [
+        "PostgreSQL",
+        "Redis"
+    ],
+    "deployment": [
+        "AWS",
+        "Docker"
+    ],
+    "estimate": {
+        "days": 70,
+        "complexity": "low"
+    },
+    "team_size": 8,
+    "tags": [
+        "newsletter",
+        "writing",
+        "subscription",
+        "email",
+        "publishing"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Newsletter platform for independent writers with built-in payments and email delivery system."
+        },
+        {
+            "type": "tech_stack",
+            "content": "React/Next.js for writer dashboard and reader sites. Node.js backend. PostgreSQL for all data."
+        }
+    ],
+    "assets": {
+        "readme": "See README.md",
+        "folder_structure": [
+            "src/",
+            "tests/"
+        ]
+    },
+    "project_id": "project_035_substack"
+}

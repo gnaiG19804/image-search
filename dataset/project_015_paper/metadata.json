@@ -1,17 +1,53 @@
 {
-  "project_id": "project_015",
-  "title": "Báo mới",
-  "tech_stack": [
-    "React",
-    "Node.js",
-    "MongoDB"
-  ],
-  "estimate_days": 30,
-  "repo_url": "https://github.com/username/repo",
-  "tags": [
-    "web",
-    "mobile",
-    "ecommerce"
-  ],
-  "description": "Mô tả chi tiết về dự án"
+    "title": "Dropbox Paper Clone",
+    "repo_url": "https://github.com/dropbox/paper-clone",
+    "project_type": "product",
+    "status": "active",
+    "domain": "productivity",
+    "platform": [
+        "web"
+    ],
+    "frontend": [
+        "React",
+        "Draft.js"
+    ],
+    "backend": [
+        "Python",
+        "Twisted"
+    ],
+    "database": [
+        "PostgreSQL"
+    ],
+    "deployment": [
+        "AWS"
+    ],
+    "estimate": {
+        "days": 55,
+        "complexity": "medium"
+    },
+    "team_size": 4,
+    "tags": [
+        "collaborative",
+        "editor",
+        "productivity",
+        "document"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Collaborative document-editing service that allows teams to create, review, and organize text and media in a shared workspace in real-time."
+        },
+        {
+            "type": "tech_stack",
+            "content": "React and Draft.js for the rich text editor experience. Python (Twisted) for handling real-time operational transformation (OT) sync logic."
+        }
+    ],
+    "assets": {
+        "readme": "OT server setup.",
+        "folder_structure": [
+            "client/editor",
+            "server/sync"
+        ]
+    },
+    "project_id": "project_015_paper"
 }

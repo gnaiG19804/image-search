@@ -1,17 +1,54 @@
 {
-  "project_id": "project_008",
-  "title": "Pay Pal",
-  "tech_stack": [
-    "React",
-    "Node.js",
-    "MongoDB"
-  ],
-  "estimate_days": 30,
-  "repo_url": "https://github.com/username/repo",
-  "tags": [
-    "web",
-    "mobile",
-    "ecommerce"
-  ],
-  "description": "Mô tả chi tiết về dự án"
+    "title": "PayPal Clone",
+    "repo_url": "https://github.com/paypal/payment-gateway",
+    "project_type": "product",
+    "status": "active",
+    "domain": "fintech",
+    "platform": [
+        "web",
+        "backend"
+    ],
+    "frontend": [
+        "React"
+    ],
+    "backend": [
+        "Java",
+        "Spring Boot"
+    ],
+    "database": [
+        "Oracle",
+        "PostgreSQL"
+    ],
+    "deployment": [
+        "Docker"
+    ],
+    "estimate": {
+        "days": 110,
+        "complexity": "high"
+    },
+    "team_size": 7,
+    "tags": [
+        "fintech",
+        "payment",
+        "secure",
+        "banking"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Secure online payment system enabling money transfers and merchant integration. Focuses on transaction integrity, fraud detection, and multi-currency support."
+        },
+        {
+            "type": "tech_stack",
+            "content": "Java Spring Boot for enterprise-grade security and transaction management. Oracle/PostgreSQL for ACID-compliant financial record keeping."
+        }
+    ],
+    "assets": {
+        "readme": "Security audit guidelines.",
+        "folder_structure": [
+            "src/main/java",
+            "src/test"
+        ]
+    },
+    "project_id": "project_008_paypal"
 }

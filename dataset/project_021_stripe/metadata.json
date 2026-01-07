@@ -1,0 +1,57 @@
+{
+  "title": "Stripe Payment Platform",
+  "repo_url": "https://github.com/stripe/payment-api",
+  "project_type": "product",
+  "status": "active",
+  "domain": "fintech",
+  "platform": [
+    "web"
+  ],
+  "frontend": [
+    "React",
+    "TypeScript"
+  ],
+  "backend": [
+    "Ruby",
+    "Scala"
+  ],
+  "database": [
+    "PostgreSQL",
+    "MongoDB"
+  ],
+  "deployment": [
+    "AWS",
+    "Kubernetes"
+  ],
+  "estimate": {
+    "days": 160,
+    "complexity": "high"
+  },
+  "team_size": 18,
+  "tags": [
+    "payments",
+    "fintech",
+    "api",
+    "billing",
+    "subscriptions"
+  ],
+  "semantic_documents": [
+    {
+      "type": "description",
+      "content": "Comprehensive payment processing infrastructure for internet businesses. Handles billions of dollars annually with support for credit cards, digital wallets, bank transfers, and local payment methods across 135+ currencies. Features fraud detection, recurring billing, and extensive API integrations."
+    },
+    {
+      "type": "tech_stack",
+      "content": "React/TypeScript for merchant dashboard. Ruby and Scala microservices for payment processing with high availability. PostgreSQL for transactional consistency, MongoDB for flexible event storage. Real-time fraud detection with machine learning."
+    }
+  ],
+  "assets": {
+    "readme": "PCI-DSS compliant architecture.",
+    "folder_structure": [
+      "services/payments",
+      "services/billing",
+      "services/fraud"
+    ]
+  },
+  "project_id": "project_021_stripe"
+}

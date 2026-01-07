@@ -1,17 +1,54 @@
 {
-  "project_id": "project_001",
-  "title": "Unesco",
-  "tech_stack": [
-    "React",
-    "Node.js",
-    "MongoDB"
-  ],
-  "estimate_days": 30,
-  "repo_url": "https://github.com/username/repo",
-  "tags": [
-    "web",
-    "mobile",
-    "ecommerce"
-  ],
-  "description": "Mô tả chi tiết về dự án"
+    "title": "UNESCO World Heritage Portal",
+    "repo_url": "https://github.com/unesco/heritage-portal",
+    "project_type": "product",
+    "status": "active",
+    "domain": "education",
+    "platform": [
+        "web"
+    ],
+    "frontend": [
+        "Drupal",
+        "jQuery"
+    ],
+    "backend": [
+        "PHP",
+        "MySQL"
+    ],
+    "database": [
+        "MySQL"
+    ],
+    "deployment": [
+        "Apache"
+    ],
+    "estimate": {
+        "days": 45,
+        "complexity": "medium"
+    },
+    "team_size": 3,
+    "tags": [
+        "education",
+        "heritage",
+        "map",
+        "cms",
+        "search"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Official portal for exploring UNESCO World Heritage sites featuring interactive maps and rich media galleries. Designed for researchers, tourists, and educational institutions to access conservation data."
+        },
+        {
+            "type": "tech_stack",
+            "content": "Built on Drupal (PHP) for robust content management of heritage records. jQuery powers the interactive map components. MySQL handles structured data for thousands of sites."
+        }
+    ],
+    "assets": {
+        "readme": "Standard Drupal setup guide.",
+        "folder_structure": [
+            "sites/all/modules",
+            "sites/all/themes"
+        ]
+    },
+    "project_id": "project_001_unesco"
 }

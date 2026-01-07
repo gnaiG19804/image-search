@@ -1,0 +1,57 @@
+{
+    "title": "MyFitnessPal Nutrition Tracker",
+    "repo_url": "https://github.com/myfitnesspal/platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "healthcare",
+    "platform": [
+        "mobile",
+        "web"
+    ],
+    "frontend": [
+        "React Native",
+        "Vue.js"
+    ],
+    "backend": [
+        "Node.js",
+        "Python"
+    ],
+    "database": [
+        "PostgreSQL",
+        "MongoDB"
+    ],
+    "deployment": [
+        "AWS",
+        "Docker"
+    ],
+    "estimate": {
+        "days": 100,
+        "complexity": "medium"
+    },
+    "team_size": 11,
+    "tags": [
+        "nutrition",
+        "calorie-tracking",
+        "diet",
+        "fitness",
+        "health"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Calorie counter and diet tracker with barcode scanner, recipe importer, and exercise logging."
+        },
+        {
+            "type": "tech_stack",
+            "content": "React Native for mobile. Vue.js for web. Node.js API. MongoDB for food database, PostgreSQL for users."
+        }
+    ],
+    "assets": {
+        "readme": "See README.md",
+        "folder_structure": [
+            "src/",
+            "tests/"
+        ]
+    },
+    "project_id": "project_045_myfitnesspal"
+}

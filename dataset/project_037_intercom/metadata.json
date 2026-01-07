@@ -1,0 +1,57 @@
+{
+    "title": "Intercom Customer Messaging",
+    "repo_url": "https://github.com/intercom/platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "communication",
+    "platform": [
+        "web",
+        "mobile"
+    ],
+    "frontend": [
+        "React",
+        "React Native"
+    ],
+    "backend": [
+        "Ruby",
+        "Rails"
+    ],
+    "database": [
+        "PostgreSQL",
+        "Elasticsearch"
+    ],
+    "deployment": [
+        "AWS",
+        "Docker"
+    ],
+    "estimate": {
+        "days": 110,
+        "complexity": "medium"
+    },
+    "team_size": 12,
+    "tags": [
+        "customer-support",
+        "chat",
+        "messaging",
+        "helpdesk",
+        "automation"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Customer messaging platform with live chat, help desk, and marketing automation for businesses."
+        },
+        {
+            "type": "tech_stack",
+            "content": "React for messenger widget. Ruby on Rails backend. Elasticsearch for conversation search."
+        }
+    ],
+    "assets": {
+        "readme": "See README.md",
+        "folder_structure": [
+            "src/",
+            "tests/"
+        ]
+    },
+    "project_id": "project_037_intercom"
+}

@@ -1,0 +1,57 @@
+{
+    "title": "Airbnb Vacation Rentals",
+    "repo_url": "https://github.com/airbnb/platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "ecommerce",
+    "platform": [
+        "web",
+        "mobile"
+    ],
+    "frontend": [
+        "React",
+        "React Native"
+    ],
+    "backend": [
+        "Ruby",
+        "Java"
+    ],
+    "database": [
+        "PostgreSQL",
+        "Presto"
+    ],
+    "deployment": [
+        "AWS",
+        "Docker"
+    ],
+    "estimate": {
+        "days": 200,
+        "complexity": "high"
+    },
+    "team_size": 30,
+    "tags": [
+        "vacation-rentals",
+        "hospitality",
+        "booking",
+        "travel",
+        "marketplace"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Global marketplace for vacation rentals and unique stays connecting hosts with travelers across 220+ countries."
+        },
+        {
+            "type": "tech_stack",
+            "content": "React for web, React Native for mobile. Ruby on Rails + Java microservices. Presto for analytics."
+        }
+    ],
+    "assets": {
+        "readme": "See README.md",
+        "folder_structure": [
+            "src/",
+            "tests/"
+        ]
+    },
+    "project_id": "project_047_airbnb"
+}

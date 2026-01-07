@@ -1,17 +1,55 @@
 {
-  "project_id": "project_011",
-  "title": "Stack over flow",
-  "tech_stack": [
-    "React",
-    "Node.js",
-    "MongoDB"
-  ],
-  "estimate_days": 30,
-  "repo_url": "https://github.com/username/repo",
-  "tags": [
-    "web",
-    "mobile",
-    "ecommerce"
-  ],
-  "description": "Mô tả chi tiết về dự án"
+    "title": "Stack Overflow Clone",
+    "repo_url": "https://github.com/stackoverflow/clone",
+    "project_type": "product",
+    "status": "active",
+    "domain": "education",
+    "platform": [
+        "web"
+    ],
+    "frontend": [
+        "Razor",
+        "jQuery"
+    ],
+    "backend": [
+        "C#",
+        ".NET Core"
+    ],
+    "database": [
+        "SQL Server",
+        "Elasticsearch"
+    ],
+    "deployment": [
+        "IIS"
+    ],
+    "estimate": {
+        "days": 50,
+        "complexity": "medium"
+    },
+    "team_size": 3,
+    "tags": [
+        "q&a",
+        "community",
+        "knowledge",
+        "developer-tools"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Question and answer community for programmers. Includes reputation systems, voting mechanisms, and code syntax highlighting."
+        },
+        {
+            "type": "tech_stack",
+            "content": "C# and .NET Core for a performant, typed backend. SQL Server for structured data and Elasticsearch to power the complex search queries."
+        }
+    ],
+    "assets": {
+        "readme": "Database migration script.",
+        "folder_structure": [
+            "Controllers",
+            "Views",
+            "Models"
+        ]
+    },
+    "project_id": "project_011_stackoverflow"
 }

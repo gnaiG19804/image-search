@@ -22,3 +22,10 @@ faiss-cpu>=1.7.4
 tqdm
 filelock
 typing-extensions
+
+# NLP & Text Embedding
+sentence-transformers
+
+# LLM & Agent (New)
+google-generativeai
+python-dotenv

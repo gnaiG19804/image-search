@@ -1,17 +1,56 @@
 {
-  "project_id": "project_003",
-  "title": "Facebook",
-  "tech_stack": [
-    "React",
-    "Node.js",
-    "MongoDB"
-  ],
-  "estimate_days": 30,
-  "repo_url": "https://github.com/username/repo",
-  "tags": [
-    "web",
-    "mobile",
-    "ecommerce"
-  ],
-  "description": "Mô tả chi tiết về dự án"
+    "title": "Facebook Clone",
+    "repo_url": "https://github.com/facebook/facebook-clone",
+    "project_type": "product",
+    "status": "active",
+    "domain": "social",
+    "platform": [
+        "web",
+        "mobile"
+    ],
+    "frontend": [
+        "React",
+        "Relay"
+    ],
+    "backend": [
+        "Hack",
+        "Node.js"
+    ],
+    "database": [
+        "Cassandra",
+        "MySQL"
+    ],
+    "deployment": [
+        "Linux"
+    ],
+    "estimate": {
+        "days": 120,
+        "complexity": "high"
+    },
+    "team_size": 6,
+    "tags": [
+        "social",
+        "network",
+        "chat",
+        "real-time",
+        "big-data"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "A comprehensive social networking platform featuring a news feed, real-time messaging, and friend connections. Supports heavy concurrent user interactions."
+        },
+        {
+            "type": "tech_stack",
+            "content": "React and Relay for high-performance UI data fetching. Hack and Node.js for scalable backend services. Cassandra for analyzing massive social graphs."
+        }
+    ],
+    "assets": {
+        "readme": "Full stack environemnt setup.",
+        "folder_structure": [
+            "packages/react-app",
+            "packages/server"
+        ]
+    },
+    "project_id": "project_003_facebook"
 }

@@ -1,0 +1,56 @@
+{
+    "title": "OpenAI API Platform",
+    "repo_url": "https://github.com/openai/platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "cloud",
+    "platform": [
+        "web"
+    ],
+    "frontend": [
+        "React",
+        "Next.js"
+    ],
+    "backend": [
+        "Python",
+        "Rust"
+    ],
+    "database": [
+        "PostgreSQL",
+        "Redis"
+    ],
+    "deployment": [
+        "AWS",
+        "Docker"
+    ],
+    "estimate": {
+        "days": 180,
+        "complexity": "high"
+    },
+    "team_size": 35,
+    "tags": [
+        "ai",
+        "api",
+        "machine-learning",
+        "gpt",
+        "language-models"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "AI research and deployment company providing API access to large language models and AI tools for developers."
+        },
+        {
+            "type": "tech_stack",
+            "content": "React/Next.js for developer portal. Python for ML inference. Rust for high-performance API gateway."
+        }
+    ],
+    "assets": {
+        "readme": "See README.md",
+        "folder_structure": [
+            "src/",
+            "tests/"
+        ]
+    },
+    "project_id": "project_050_openai"
+}

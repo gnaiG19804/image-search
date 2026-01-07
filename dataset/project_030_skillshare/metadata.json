@@ -1,0 +1,57 @@
+{
+    "title": "Skillshare Creative Platform",
+    "repo_url": "https://github.com/skillshare/platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "education",
+    "platform": [
+        "web",
+        "mobile"
+    ],
+    "frontend": [
+        "React",
+        "React Native"
+    ],
+    "backend": [
+        "Node.js",
+        "GraphQL"
+    ],
+    "database": [
+        "PostgreSQL",
+        "Elasticsearch"
+    ],
+    "deployment": [
+        "AWS",
+        "Docker"
+    ],
+    "estimate": {
+        "days": 100,
+        "complexity": "medium"
+    },
+    "team_size": 10,
+    "tags": [
+        "creative",
+        "video-courses",
+        "community",
+        "projects",
+        "subscription"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Online learning community for creative skills offering thousands of classes with project-based learning."
+        },
+        {
+            "type": "tech_stack",
+            "content": "React for web, React Native for mobile. Node.js with GraphQL. Elasticsearch for course search."
+        }
+    ],
+    "assets": {
+        "readme": "See README.md",
+        "folder_structure": [
+            "src/",
+            "tests/"
+        ]
+    },
+    "project_id": "project_030_skillshare"
+}

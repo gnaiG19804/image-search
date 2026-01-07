@@ -1,0 +1,57 @@
+{
+    "title": "SoundCloud Audio Platform",
+    "repo_url": "https://github.com/soundcloud/platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "media",
+    "platform": [
+        "web",
+        "mobile"
+    ],
+    "frontend": [
+        "Angular",
+        "Ionic"
+    ],
+    "backend": [
+        "Ruby",
+        "Rails"
+    ],
+    "database": [
+        "PostgreSQL",
+        "Redis"
+    ],
+    "deployment": [
+        "AWS",
+        "Docker"
+    ],
+    "estimate": {
+        "days": 130,
+        "complexity": "medium"
+    },
+    "team_size": 12,
+    "tags": [
+        "music",
+        "audio",
+        "streaming",
+        "creators",
+        "social"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Audio sharing platform for musicians and podcast creators with social features and monetization tools."
+        },
+        {
+            "type": "tech_stack",
+            "content": "Angular with Ionic for mobile. Ruby on Rails backend. PostgreSQL for tracks, Redis for streaming cache."
+        }
+    ],
+    "assets": {
+        "readme": "See README.md",
+        "folder_structure": [
+            "src/",
+            "tests/"
+        ]
+    },
+    "project_id": "project_033_soundcloud"
+}

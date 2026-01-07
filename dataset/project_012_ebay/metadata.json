@@ -1,17 +1,53 @@
 {
-  "project_id": "project_012",
-  "title": "Ebay",
-  "tech_stack": [
-    "React",
-    "Node.js",
-    "MongoDB"
-  ],
-  "estimate_days": 30,
-  "repo_url": "https://github.com/username/repo",
-  "tags": [
-    "web",
-    "mobile",
-    "ecommerce"
-  ],
-  "description": "Mô tả chi tiết về dự án"
+    "title": "eBay Clone",
+    "repo_url": "https://github.com/ebay/platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "ecommerce",
+    "platform": [
+        "web"
+    ],
+    "frontend": [
+        "Marko.js"
+    ],
+    "backend": [
+        "Java",
+        "Node.js"
+    ],
+    "database": [
+        "Oracle",
+        "MongoDB"
+    ],
+    "deployment": [
+        "Private Cloud"
+    ],
+    "estimate": {
+        "days": 100,
+        "complexity": "high"
+    },
+    "team_size": 8,
+    "tags": [
+        "ecommerce",
+        "auction",
+        "marketplace",
+        "b2c"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Online auction and shopping website where people and businesses buy and sell a wide variety of goods. Features bidding systems and buy-it-now options."
+        },
+        {
+            "type": "tech_stack",
+            "content": "Marko.js for extremely fast server-side rendering. Java for core auction logic. MongoDB for flexible product catalog storage."
+        }
+    ],
+    "assets": {
+        "readme": "Auction engine setup.",
+        "folder_structure": [
+            "src/cart",
+            "src/checkout"
+        ]
+    },
+    "project_id": "project_012_ebay"
 }

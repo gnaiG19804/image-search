@@ -1,0 +1,57 @@
+{
+    "title": "Revolut Digital Bank",
+    "repo_url": "https://github.com/revolut/platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "fintech",
+    "platform": [
+        "mobile",
+        "web"
+    ],
+    "frontend": [
+        "Flutter",
+        "React"
+    ],
+    "backend": [
+        "Java",
+        "Kotlin"
+    ],
+    "database": [
+        "PostgreSQL",
+        "Cassandra"
+    ],
+    "deployment": [
+        "AWS",
+        "Docker"
+    ],
+    "estimate": {
+        "days": 200,
+        "complexity": "high"
+    },
+    "team_size": 25,
+    "tags": [
+        "banking",
+        "fintech",
+        "payments",
+        "currency-exchange",
+        "budgeting"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "All-in-one digital banking app offering currency exchange, stock trading, cryptocurrency, and budgeting tools across 150+ currencies."
+        },
+        {
+            "type": "tech_stack",
+            "content": "Flutter for cross-platform mobile. Java/Kotlin microservices. PostgreSQL for accounts, Cassandra for transactions."
+        }
+    ],
+    "assets": {
+        "readme": "See README.md",
+        "folder_structure": [
+            "src/",
+            "tests/"
+        ]
+    },
+    "project_id": "project_024_revolut"
+}

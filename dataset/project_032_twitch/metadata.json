@@ -1,0 +1,58 @@
+{
+    "title": "Twitch Live Streaming",
+    "repo_url": "https://github.com/twitch/platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "media",
+    "platform": [
+        "web",
+        "mobile"
+    ],
+    "frontend": [
+        "React",
+        "React Native"
+    ],
+    "backend": [
+        "Go",
+        "Ruby"
+    ],
+    "database": [
+        "PostgreSQL",
+        "Redis",
+        "Cassandra"
+    ],
+    "deployment": [
+        "AWS",
+        "Docker"
+    ],
+    "estimate": {
+        "days": 180,
+        "complexity": "high"
+    },
+    "team_size": 22,
+    "tags": [
+        "streaming",
+        "live-video",
+        "gaming",
+        "chat",
+        "monetization"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Live streaming platform for gamers and creators with real-time chat, subscriptions, and donations."
+        },
+        {
+            "type": "tech_stack",
+            "content": "React for web. Go for video infrastructure and chat. Cassandra for  chat history, PostgreSQL for users."
+        }
+    ],
+    "assets": {
+        "readme": "See README.md",
+        "folder_structure": [
+            "src/",
+            "tests/"
+        ]
+    },
+    "project_id": "project_032_twitch"
+}

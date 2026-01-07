@@ -1,0 +1,57 @@
+{
+    "title": "Gmail Email Service",
+    "repo_url": "https://github.com/gmail/platform",
+    "project_type": "product",
+    "status": "active",
+    "domain": "communication",
+    "platform": [
+        "web",
+        "mobile"
+    ],
+    "frontend": [
+        "Angular",
+        "TypeScript"
+    ],
+    "backend": [
+        "Java",
+        "C++"
+    ],
+    "database": [
+        "Bigtable",
+        "Spanner"
+    ],
+    "deployment": [
+        "AWS",
+        "Docker"
+    ],
+    "estimate": {
+        "days": 250,
+        "complexity": "high"
+    },
+    "team_size": 50,
+    "tags": [
+        "email",
+        "search",
+        "spam-filter",
+        "cloud",
+        "productivity"
+    ],
+    "semantic_documents": [
+        {
+            "type": "description",
+            "content": "Web-based email service with powerful search, spam filtering, smart categorization, and 15GB free storage."
+        },
+        {
+            "type": "tech_stack",
+            "content": "Angular for web client. Java for backend services. C++ for mail servers. Bigtable for storage, Spanner for metadata."
+        }
+    ],
+    "assets": {
+        "readme": "See README.md",
+        "folder_structure": [
+            "src/",
+            "tests/"
+        ]
+    },
+    "project_id": "project_036_gmail"
+}
