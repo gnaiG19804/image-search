@@ -25,6 +25,16 @@ Thumbs.db
 
 AI_AGENT_ROADMAP.md
 DATABASE_SCHEMA.md
+README_TEST.md
 *.mermaid
 .env
 *.db
+*.pth
+test_semantic_classification1.png
+test_semantic_classification.py
+test_sam_detector.py
+test_sam_detection.png
+test_single_image_pipeline.py
+apply_schema.py
+update_db_components.py
+test.jpg

@@ -1,0 +1,10 @@
+Collecting pymongo
+  Downloading pymongo-4.16.0-cp313-cp313-win_amd64.whl.metadata (10.0 kB)
+Collecting dnspython<3.0.0,>=2.6.1 (from pymongo)
+  Using cached dnspython-2.8.0-py3-none-any.whl.metadata (5.7 kB)
+Downloading pymongo-4.16.0-cp313-cp313-win_amd64.whl (959 kB)
+   ---------------------------------------- 959.2/959.2 kB 3.4 MB/s  0:00:00
+Using cached dnspython-2.8.0-py3-none-any.whl (331 kB)
+Installing collected packages: dnspython, pymongo
+
+Successfully installed dnspython-2.8.0 pymongo-4.16.0
