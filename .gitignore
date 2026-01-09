@@ -38,3 +38,5 @@ test_single_image_pipeline.py
 apply_schema.py
 update_db_components.py
 test.jpg
+detect_components_safe.py
+test_component_search.py

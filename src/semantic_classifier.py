@@ -24,15 +24,46 @@ class SemanticClassifier:
         if use_clip:
             self._init_clip()
         
-        # Define component taxonomy
+        # Define COMPLETE component taxonomy (25+ types)
         self.component_types = {
-            # Layout Structure
-            'header', 'hero', 'sidebar', 'main_content', 'footer', 'breadcrumb',
-            # Content Blocks
-            'section', 'article', 'gallery', 'testimonials', 'pricing_table', 'faq',
-            # Interactive Elements
-            'cta_button', 'form', 'search_bar', 'menu', 'widget', 
-            'social_links', 'chat_widget', 'modal'
+            # === LAYOUT STRUCTURE ===
+            'header',           # Top navigation bar
+            'navigation',       # Menu / Navigation bar
+            'hero',            # Hero banner / Slider
+            'banner',          # Promotional banner
+            'promo_banner',    # Sale/promotion banner
+            'breadcrumb',      # Breadcrumb trail
+            'sidebar',         # Side navigation / column
+            'main_content',    # Main content area
+            'footer',          # Footer section
+            'copyright',       # Copyright area
+            
+            # === CONTENT BLOCKS ===
+            'section',         # Generic content section
+            'article',         # Article / Blog post
+            'widget',          # Small widget / box
+            'gallery',         # Image gallery / grid
+            'testimonials',    # Customer reviews
+            'pricing_table',   # Pricing comparison table
+            'faq',            # FAQ section
+            
+            # === INTERACTIVE ELEMENTS ===
+            'cta_button',      # Call-to-action button
+            'form',           # Any form (login, signup, contact, search)
+            'login_form',     # Login form specifically
+            'search_form',    # Search bar / form
+            'input_field',    # Single input field
+            
+            # === SOCIAL & SUPPORT ===
+            'social_links',   # Social media icons
+            'chat_widget',    # Chat support button
+            'modal',          # Popup / Modal
+            'popup',          # Popup overlay
+            
+            # === SPECIALIZED ===
+            'product_card',   # E-commerce product card
+            'menu',           # Dropdown menu
+            'logo',           # Company logo
         }
     
     def _init_clip(self):
@@ -47,26 +78,46 @@ class SemanticClassifier:
             # Load CLIP model
             self.clip_model, self.clip_preprocess = clip.load("ViT-B/32", device=self.device)
             
-            # Enhanced text prompts for better CLIP matching
+            # ENHANCED text prompts - VERY DETAILED for better accuracy
             self.clip_prompts = {
-                'cta_button': "a bright colorful call to action button with bold text",
-                'form': "a login form or signup form with multiple input fields and text boxes",
-                'gallery': "a photo gallery grid showing multiple product images or photos arranged in rows",
-                'testimonials': "customer testimonials section with profile photos quotes and star ratings",
-                'pricing_table': "a pricing plan comparison table with multiple pricing tiers and feature lists",
-                'menu': "a navigation menu bar with multiple links and menu items",
-                'search_bar': "a search input box with magnifying glass icon",
-                'social_links': "social media icons like facebook twitter instagram youtube linkedin",
-                'hero': "a large hero banner section with big headline text and background image",
-                'article': "an article or blog post with paragraph text and content",
-                'faq': "frequently asked questions FAQ section with collapsible questions and answers",
-                'breadcrumb': "a breadcrumb navigation trail showing page hierarchy",
-                'sidebar': "a sidebar navigation menu or widget column",
-                'section': "a content section with heading and body text",
-                'widget': "a small widget box or component",
-                'product_card': "a product card showing product image price and buy button",
-                'logo': "a company logo or brand icon",
-                'footer': "a website footer section with copyright text sitemap links and contact information on dark background"  # Very specific!
+                # Layout Structure
+                'header': "a website header navigation bar at the top with logo menu links and search box on white or colored background",
+                'navigation': "a horizontal navigation menu bar with multiple menu links tabs and dropdown menus",
+                'hero': "a large hero banner section with big bold headline text call to action button and attractive background image or gradient at the top of page",
+                'banner': "a promotional banner or advertising banner with colorful design product images sale text discount percentage bright colors",
+                'promo_banner': "a sale promotion banner with bold discount percentages special offer text limited time sale flash sale coupon code on vibrant red orange yellow background",
+                'breadcrumb': "a breadcrumb navigation trail showing page hierarchy with home arrow links separated by slashes or arrows",
+                'sidebar': "a sidebar column or vertical navigation menu with links widgets on the left or right side of page",
+                'main_content': "the main content area body section with paragraphs text images and content",
+                'footer': "a website footer section at bottom with dark background multiple columns sitemap links copyright text contact info social icons",
+                'copyright': "a copyright text area with small text showing year company name and rights reserved",
+                
+                # Content Blocks
+                'section': "a content section block with heading subheading and body text paragraphs",
+                'article': "an article or blog post with title author date paragraphs images and formatted text content",
+                'widget': "a small widget box component with border icon title and compact content",
+                'gallery': "a photo gallery grid layout showing multiple images arranged in rows and columns with thumbnails",
+                'testimonials': "customer testimonials reviews section with user profile photos quotes star ratings and customer feedback",
+                'pricing_table': "a pricing plan comparison table with multiple pricing tiers columns showing price features and buy buttons",
+                'faq': "frequently asked questions FAQ section with collapsible expandable questions and answers accordion style",
+                
+                # Interactive Elements
+                'cta_button': "a bright colorful call to action button with bold text like buy now sign up get started subscribe on vibrant background",
+                'form': "a form interface with multiple input fields textboxes labels and submit button for data entry",
+                'login_form': "a login signin form card with email username input password field remember me checkbox and login button",
+                'search_form': "a search bar input box with magnifying glass icon search button and placeholder text",
+                'input_field': "a single text input box field for typing text with border and placeholder text",
+                
+                # Social & Support  
+                'social_links': "social media icons links for facebook twitter instagram youtube linkedin pinterest",
+                'chat_widget': "a live chat support button widget icon in bottom right corner with message bubble icon",
+                'modal': "a popup modal dialog box overlay window with close button title content on top of dimmed background",
+                'popup': "a popup overlay window notification banner with message close button and call to action",
+                
+                # Specialized
+                'product_card': "an ecommerce product card showing product image name price rating stars add to cart button",
+                'menu': "a dropdown menu panel with list of menu items links and submenu options",
+                'logo': "a company brand logo icon or logotype image at top left corner",
             }
             
             print(f"[INFO] CLIP model loaded on {self.device} for semantic classification")
@@ -94,8 +145,8 @@ class SemanticClassifier:
         # Priority 1: CLIP FIRST (visual content matching)
         if self.use_clip:
             clip_type, confidence = self._classify_by_clip(component)
-            # LOWERED threshold for better coverage (0.35 → 0.25)
-            if confidence > 0.25:  # Accept lower confidence
+            # Balanced threshold for good precision/recall
+            if confidence > 0.25:  # Working threshold from POC
                 return clip_type
         
         # Priority 2: Strong structural rules (very obvious only)
@@ -224,7 +275,7 @@ class SemanticClassifier:
                 image_features = image_features / image_features.norm(dim=-1, keepdim=True)
                 text_features = text_features / text_features.norm(dim=-1, keepdim=True)
                 
-                # Cosine similarity
+                # Cosine similarity with SOFTMAX (proper probability distribution)
                 similarity = (image_features @ text_features.T).softmax(dim=-1)
             
             # Get best match
