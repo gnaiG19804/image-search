@@ -40,3 +40,5 @@ update_db_components.py
 test.jpg
 detect_components_safe.py
 test_component_search.py
+internal_log.txt
+generate_gold_standard.py

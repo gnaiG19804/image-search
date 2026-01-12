@@ -1,55 +1,406 @@
 {
-    "title": "Amazon Retail Clone",
-    "repo_url": "https://github.com/amazon/retail-platform",
-    "project_type": "product",
-    "status": "active",
+    "project_id": "project_013_amazon",
+    "title": "Amazon Clone",
+    "repo_url": "https://github.com/gnaiG19804/testamazon",
     "domain": "ecommerce",
-    "platform": [
-        "web",
-        "mobile"
-    ],
-    "frontend": [
-        "React",
-        "Next.js"
-    ],
-    "backend": [
-        "Java",
-        "Scala"
-    ],
-    "database": [
-        "DynamoDB",
-        "Aurora"
-    ],
-    "deployment": [
-        "AWS"
-    ],
-    "estimate": {
-        "days": 180,
-        "complexity": "high"
-    },
-    "team_size": 12,
-    "tags": [
-        "ecommerce",
-        "retail",
-        "marketplace",
-        "logistics"
-    ],
-    "semantic_documents": [
-        {
-            "type": "description",
-            "content": "Massive online retailer platform with diverse product categories, 1-click ordering, and prime delivery logistics integration. Handles millions of concurrent users."
-        },
-        {
-            "type": "tech_stack",
-            "content": "React/Next.js for SEO-optimized frontend. Java/Scala microservices for order processing. DynamoDB for cart/session data at scale."
-        }
-    ],
-    "assets": {
-        "readme": "Microservice architecture diagram.",
-        "folder_structure": [
-            "services/order",
-            "services/catalog"
+    "tech_stack": {
+        "frontend": [
+            "React",
+            "TypeScript",
+            "Redux"
+        ],
+        "backend": [
+            "Node.js",
+            "Express",
+            "AWS Lambda"
+        ],
+        "database": [
+            "DynamoDB",
+            "Elasticsearch",
+            "Redis"
         ]
     },
-    "project_id": "project_013_amazon"
+    "images": [
+        {
+            "image_id": "amazon_img_001",
+            "image_path": "images/image1.png",
+            "page_name": "Homepage",
+            "components": [
+                {
+                    "component_id": "amazon_comp_001",
+                    "type": "header",
+                    "name": "Amazon Header",
+                    "semantic_tags": [
+                        "header",
+                        "logo",
+                        "location",
+                        "search-bar",
+                        "account",
+                        "cart"
+                    ],
+                    "description": "Main header with Amazon logo, delivery location selector, large search bar with category dropdown, language selector, account dropdown, orders link, and cart icon with count",
+                    "source_code": {
+                        "file_path": "src/components/Header/Header.tsx",
+                        "start_line": 1,
+                        "end_line": 68
+                    }
+                },
+                {
+                    "component_id": "amazon_comp_002",
+                    "type": "sub-nav",
+                    "name": "Category Sub Navigation",
+                    "semantic_tags": [
+                        "navigation",
+                        "menu",
+                        "categories",
+                        "hamburger"
+                    ],
+                    "description": "Secondary navigation with hamburger menu (All), Today's Deals, Prime Video, Registry, Gift Cards, Customer Service, Sell",
+                    "source_code": {
+                        "file_path": "src/components/SubNav/SubNav.tsx",
+                        "start_line": 1,
+                        "end_line": 36
+                    }
+                },
+                {
+                    "component_id": "amazon_comp_003",
+                    "type": "hero-banner",
+                    "name": "Promotional Hero Carousel",
+                    "semantic_tags": [
+                        "hero",
+                        "carousel",
+                        "banner",
+                        "promotion",
+                        "gradient"
+                    ],
+                    "description": "Full-width hero carousel with colorful gradient background showing promotional content",
+                    "source_code": {
+                        "file_path": "src/components/HeroCarousel/HeroCarousel.tsx",
+                        "start_line": 1,
+                        "end_line": 51
+                    }
+                },
+                {
+                    "component_id": "amazon_comp_004",
+                    "type": "product-category-grid",
+                    "name": "Category Product Cards",
+                    "semantic_tags": [
+                        "grid",
+                        "cards",
+                        "categories",
+                        "products",
+                        "four-column"
+                    ],
+                    "description": "Four-column grid of category cards with product thumbnails",
+                    "source_code": {
+                        "file_path": "src/components/CategoryCards/CategoryCards.tsx",
+                        "start_line": 1,
+                        "end_line": 38
+                    }
+                }
+            ]
+        },
+        {
+            "image_id": "amazon_img_002",
+            "image_path": "images/image2.png",
+            "page_name": "Search Results Page",
+            "components": [
+                {
+                    "component_id": "amazon_comp_005",
+                    "type": "sidebar-filters",
+                    "name": "Search Filters Sidebar",
+                    "semantic_tags": [
+                        "sidebar",
+                        "filters",
+                        "facets",
+                        "refinements"
+                    ],
+                    "description": "Left sidebar with filter sections: Popular Shopping Ideas, Deals & Discounts, Customer Reviews, Brands with checkboxes",
+                    "source_code": {
+                        "file_path": "src/components/SearchFilters/SearchFilters.tsx",
+                        "start_line": 1,
+                        "end_line": 38
+                    }
+                },
+                {
+                    "component_id": "amazon_comp_006",
+                    "type": "search-results-header",
+                    "name": "Results Header",
+                    "semantic_tags": [
+                        "header",
+                        "count",
+                        "sort",
+                        "query"
+                    ],
+                    "description": "Search results header showing result count and sort dropdown",
+                    "source_code": {
+                        "file_path": "src/components/ResultsHeader/ResultsHeader.tsx",
+                        "start_line": 1,
+                        "end_line": 43
+                    }
+                },
+                {
+                    "component_id": "amazon_comp_007",
+                    "type": "product-grid",
+                    "name": "Product Results Grid",
+                    "semantic_tags": [
+                        "grid",
+                        "products",
+                        "cards",
+                        "search-results"
+                    ],
+                    "description": "Product grid showing products with image, title, rating stars, review count, price, Prime badge, delivery estimate",
+                    "source_code": {
+                        "file_path": "src/components/ProductGrid/ProductGrid.tsx",
+                        "start_line": 1,
+                        "end_line": 59
+                    }
+                }
+            ]
+        },
+        {
+            "image_id": "amazon_img_003",
+            "image_path": "images/image3.png",
+            "page_name": "Product Detail Page",
+            "components": [
+                {
+                    "component_id": "amazon_comp_008",
+                    "type": "breadcrumb",
+                    "name": "Product Breadcrumb",
+                    "semantic_tags": [
+                        "breadcrumb",
+                        "navigation",
+                        "hierarchy"
+                    ],
+                    "description": "Breadcrumb: Electronics > Computers & Accessories > Monitors",
+                    "source_code": {
+                        "file_path": "src/components/Breadcrumb/Breadcrumb.tsx",
+                        "start_line": 1,
+                        "end_line": 22
+                    }
+                },
+                {
+                    "component_id": "amazon_comp_009",
+                    "type": "product-image-gallery",
+                    "name": "Product Image Gallery",
+                    "semantic_tags": [
+                        "gallery",
+                        "images",
+                        "thumbnails",
+                        "zoom",
+                        "video"
+                    ],
+                    "description": "Left side image gallery with main large image, thumbnail strip including video thumbnails",
+                    "source_code": {
+                        "file_path": "src/components/ImageGallery/ImageGallery.tsx",
+                        "start_line": 1,
+                        "end_line": 47
+                    }
+                },
+                {
+                    "component_id": "amazon_comp_010",
+                    "type": "product-info",
+                    "name": "Product Information Section",
+                    "semantic_tags": [
+                        "product",
+                        "title",
+                        "rating",
+                        "price",
+                        "specifications"
+                    ],
+                    "description": "Product info with title, rating stars, review count, badge, price with discount percentage, specifications table",
+                    "source_code": {
+                        "file_path": "src/components/ProductInfo/ProductInfo.tsx",
+                        "start_line": 1,
+                        "end_line": 66
+                    }
+                },
+                {
+                    "component_id": "amazon_comp_011",
+                    "type": "variant-selector",
+                    "name": "Style/Variant Selector",
+                    "semantic_tags": [
+                        "variants",
+                        "options",
+                        "selector",
+                        "thumbnails"
+                    ],
+                    "description": "Style selector showing product variants with size options and their prices",
+                    "source_code": {
+                        "file_path": "src/components/VariantSelector/VariantSelector.tsx",
+                        "start_line": 1,
+                        "end_line": 37
+                    }
+                },
+                {
+                    "component_id": "amazon_comp_012",
+                    "type": "buy-box",
+                    "name": "Buy Box / Add to Cart Section",
+                    "semantic_tags": [
+                        "buy-box",
+                        "price",
+                        "delivery",
+                        "add-to-cart",
+                        "buy-now"
+                    ],
+                    "description": "Right side buy box with price, delivery info, stock status, quantity selector, Add to Cart and Buy Now buttons",
+                    "source_code": {
+                        "file_path": "src/components/BuyBox/BuyBox.tsx",
+                        "start_line": 1,
+                        "end_line": 72
+                    }
+                }
+            ]
+        },
+        {
+            "image_id": "amazon_img_004",
+            "image_path": "images/image4.png",
+            "page_name": "Login Page",
+            "components": [
+                {
+                    "component_id": "amazon_comp_013",
+                    "type": "login-form",
+                    "name": "Sign In Form",
+                    "semantic_tags": [
+                        "form",
+                        "login",
+                        "authentication",
+                        "card"
+                    ],
+                    "description": "Centered login card with Amazon logo, email/phone input with yellow border, Continue button, terms text, and business account CTA",
+                    "source_code": {
+                        "file_path": "src/components/LoginForm/LoginForm.tsx",
+                        "start_line": 1,
+                        "end_line": 55
+                    }
+                },
+                {
+                    "component_id": "amazon_comp_014",
+                    "type": "footer-links",
+                    "name": "Login Footer",
+                    "semantic_tags": [
+                        "footer",
+                        "links",
+                        "legal",
+                        "copyright"
+                    ],
+                    "description": "Minimal footer with Conditions of Use, Privacy Notice, Help links and copyright text",
+                    "source_code": {
+                        "file_path": "src/components/LoginFooter/LoginFooter.tsx",
+                        "start_line": 1,
+                        "end_line": 15
+                    }
+                }
+            ]
+        },
+        {
+            "image_id": "amazon_img_005",
+            "image_path": "images/image5.png",
+            "page_name": "Shopping Cart",
+            "components": [
+                {
+                    "component_id": "amazon_comp_015",
+                    "type": "header",
+                    "name": "Amazon Business Header",
+                    "semantic_tags": [
+                        "header",
+                        "business",
+                        "navigation",
+                        "search"
+                    ],
+                    "description": "Amazon Business variant header with Business Essentials, Business Savings Event links",
+                    "source_code": {
+                        "file_path": "src/components/BusinessHeader/BusinessHeader.tsx",
+                        "start_line": 1,
+                        "end_line": 34
+                    }
+                },
+                {
+                    "component_id": "amazon_comp_016",
+                    "type": "cart-header",
+                    "name": "Shopping Cart Header",
+                    "semantic_tags": [
+                        "header",
+                        "cart",
+                        "actions",
+                        "share"
+                    ],
+                    "description": "Cart page header with 'Shopping Cart' title, share options, and Download as PDF button",
+                    "source_code": {
+                        "file_path": "src/components/CartHeader/CartHeader.tsx",
+                        "start_line": 1,
+                        "end_line": 19
+                    }
+                },
+                {
+                    "component_id": "amazon_comp_017",
+                    "type": "cart-item",
+                    "name": "Cart Item Row",
+                    "semantic_tags": [
+                        "cart",
+                        "item",
+                        "product",
+                        "quantity",
+                        "price"
+                    ],
+                    "description": "Cart item row with product image, title, price, Prime badge, FREE Returns, quantity dropdown, Delete and Save for later links",
+                    "source_code": {
+                        "file_path": "src/components/CartItem/CartItem.tsx",
+                        "start_line": 1,
+                        "end_line": 57
+                    }
+                },
+                {
+                    "component_id": "amazon_comp_018",
+                    "type": "frequently-bought",
+                    "name": "Frequently Bought Together",
+                    "semantic_tags": [
+                        "recommendations",
+                        "cross-sell",
+                        "bundle"
+                    ],
+                    "description": "Recommendation section showing frequently bought together items with product thumbnails",
+                    "source_code": {
+                        "file_path": "src/components/FrequentlyBought/FrequentlyBought.tsx",
+                        "start_line": 1,
+                        "end_line": 38
+                    }
+                },
+                {
+                    "component_id": "amazon_comp_019",
+                    "type": "cart-summary",
+                    "name": "Cart Summary / Checkout Box",
+                    "semantic_tags": [
+                        "summary",
+                        "subtotal",
+                        "checkout",
+                        "sidebar"
+                    ],
+                    "description": "Right sidebar showing subtotal with item count, free shipping eligibility and Proceed to checkout button",
+                    "source_code": {
+                        "file_path": "src/components/CartSummary/CartSummary.tsx",
+                        "start_line": 1,
+                        "end_line": 46
+                    }
+                },
+                {
+                    "component_id": "amazon_comp_020",
+                    "type": "saved-items",
+                    "name": "Your Items / Saved for Later",
+                    "semantic_tags": [
+                        "wishlist",
+                        "saved",
+                        "items",
+                        "list"
+                    ],
+                    "description": "Section showing saved items with 'No items saved for later' message and Buy it again link",
+                    "source_code": {
+                        "file_path": "src/components/SavedItems/SavedItems.tsx",
+                        "start_line": 1,
+                        "end_line": 42
+                    }
+                }
+            ]
+        }
+    ]
 }

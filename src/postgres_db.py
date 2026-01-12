@@ -274,6 +274,49 @@ class PostgresDB:
             cur.execute("SELECT COUNT(*) FROM project_images;")
             return cur.fetchone()[0]
 
+    def search_components(self, query_vector, limit=10):
+        """
+        Search for UI components using vector similarity
+        Args:
+            query_vector: 512-dim CLIP embedding vector
+            limit: Number of results to return
+        """
+        sql = """
+            SELECT 
+                c.id, c.component_name, c.component_type, 
+                p.project_code, p.repo_url, 
+                pi.image_path, 
+                c.source_file_path, c.source_start_line, c.source_end_line,
+                c.bbox_norm,
+                (c.embedding <=> %s::vector) as distance
+            FROM components c
+            JOIN projects p ON c.project_id = p.id
+            JOIN project_images pi ON c.image_id = pi.id
+            ORDER BY distance ASC
+            LIMIT %s
+        """
+        
+        with self.conn.cursor() as cur:
+            cur.execute(sql, (query_vector, limit))
+            results = cur.fetchall()
+            
+            return [
+                {
+                    "id": r[0],
+                    "name": r[1],
+                    "type": r[2],
+                    "project": r[3],
+                    "repo_url": r[4],
+                    "image": r[5],
+                    "file_path": r[6],
+                    "start_line": r[7],
+                    "end_line": r[8],
+                    "bbox": r[9],  # bbox_norm [x, y, w, h]
+                    "score": 1 - r[10]  # Convert distance to similarity score
+                }
+                for r in results
+            ]
+
     def close(self):
         if self.conn:
             self.conn.close()

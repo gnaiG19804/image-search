@@ -72,15 +72,15 @@ class UIComponentDetector:
             sam = sam_model_registry[model_type](checkpoint=str(checkpoint_path))
             sam.to(device=device)
             
-            # Create automatic mask generator (RELAXED for better coverage)
+            # Create automatic mask generator (OPTIMIZED for UI components)
             self.mask_generator = SamAutomaticMaskGenerator(
                 model=sam,
-                points_per_side=32,  # Grid resolution
-                pred_iou_thresh=0.75,  # 0.86 → 0.75 (detect more elements)
-                stability_score_thresh=0.85,  # 0.92 → 0.85 (allow less stable objects)
+                points_per_side=16,  # Grid resolution (OPTIMIZED: 32→16 for 2x speed)
+                pred_iou_thresh=0.80,  # Higher = fewer but better masks
+                stability_score_thresh=0.88,  # Higher = more stable regions
                 crop_n_layers=1,
                 crop_n_points_downscale_factor=2,
-                min_mask_region_area=50,  # 100 → 50 (catch smaller buttons/icons)
+                min_mask_region_area=200,  # Skip text & small icons (was 50)
             )
             
             print(f"[INFO] SAM loaded successfully!")
@@ -132,7 +132,14 @@ class UIComponentDetector:
         # Generate masks automatically
         print(f"[INFO] Running SAM inference...")
         masks = self.mask_generator.generate(img)
-        print(f"[INFO] SAM detected {len(masks)} objects")
+        
+        # OPTIMIZATION: Early size filtering (remove tiny/huge masks)
+        img_area = h * w
+        original_count = len(masks)
+        masks = [m for m in masks if 
+                 0.001 < (m['bbox'][2] * m['bbox'][3]) / img_area < 0.5]
+        
+        print(f"[INFO] SAM detected {original_count} objects ({len(masks)} after size filter)")
         
         # Convert masks to components
         for idx, mask_data in enumerate(masks):
@@ -180,10 +187,10 @@ class UIComponentDetector:
         components = self._filter_components(components, img.shape)
         print(f"[INFO] After filtering: {len(components)} elements detected")
         
-        # DISABLED: Hierarchical grouping (user wants all raw elements)
-        # print(f"[INFO] Grouping into sections...")
-        # components = self._hierarchical_grouping(components, img.shape)
-        # print(f"[INFO] After grouping: {len(components)} sections")
+        # ENABLED: Hierarchical grouping (user wants main sections only)
+        print(f"[INFO] Grouping into sections...")
+        components = self._hierarchical_grouping(components, img.shape)
+        print(f"[INFO] After grouping: {len(components)} sections")
         
         # Semantic classification (if enabled)
         if self.classify_semantics and self.semantic_classifier:
@@ -212,21 +219,26 @@ class UIComponentDetector:
             comp_w, comp_h = bbox[2], bbox[3]
             comp_area = comp_w * comp_h
             
-            # Filter 1: Loại bỏ objects CỰC nhỏ (< 0.05% diện tích ảnh) - VERY RELAXED
-            if comp_area < img_area * 0.0005:  # Only remove tiny noise
+            # Filter 1: Thắt chặt diện tích tối thiểu (2% diện tích ảnh)
+            # Người dùng chỉ muốn các thành phần CHÍNH
+            if comp_area < img_area * 0.02: 
                 continue
             
-            # Filter 2: Loại bỏ objects quá to (> 85% - background)
-            if comp_area > img_area * 0.85:
+            # Filter 2: Loại bỏ objects quá to (> 90% - background/page)
+            if comp_area > img_area * 0.90:
                 continue
             
-            # Filter 3: Loại bỏ confidence CỰC thấp - VERY RELAXED
-            if comp.get('confidence', 0) < 0.70:  # 0.75 → 0.70
+            # Filter 3: Bắt buộc cạnh tối thiểu (100px)
+            if comp_w < 100 and comp_h < 100:
                 continue
             
-            # Filter 4: Loại bỏ objects quá dài/hẹp (aspect ratio > 15)
+            # Filter 4: Loại bỏ confidence thấp (< 0.8)
+            if comp.get('confidence', 0) < 0.80:
+                continue
+            
+            # Filter 5: Aspect ratio quá cực đoan (> 10)
             aspect_ratio = max(comp_w, comp_h) / (min(comp_w, comp_h) + 1e-6)
-            if aspect_ratio > 15:  # 10 → 15 (allow longer elements)
+            if aspect_ratio > 10:
                 continue
             
             filtered.append(comp)
@@ -329,7 +341,7 @@ class UIComponentDetector:
         if regions['footer_candidates']:
             # Check if any component spans almost full width
             for comp in regions['footer_candidates']:
-                if comp['bbox'][2] > w * 0.9:
+                if comp['bbox'][2] > w * 0.6: # Rộng hơn 60% là ok cho footer
                     has_real_footer = True
                     break
         
@@ -369,8 +381,8 @@ class UIComponentDetector:
         if not components:
             return []
         
-        # Distance threshold (% of image dimension)
-        distance_threshold = min(img_width, img_height) * 0.15
+        # Tăng distance threshold để gom nhóm mạnh tay hơn (25% chiều cao ảnh)
+        distance_threshold = img_height * 0.25
         
         # Simple agglomerative clustering
         clusters = [[comp] for comp in components]

@@ -1,155 +1,168 @@
+-- =============================================================================
+-- SCHEMA FOR COMPONENT-BASED IMAGE SEARCH SYSTEM
+-- =============================================================================
+-- This schema supports the following workflow:
+-- 1. User sends an image → Agent detects UI components
+-- 2. Each component embedding queries vector DB
+-- 3. Returns similar components with source_code file references
+-- 4. Agent fetches code from GitHub using repo_url + file_path + line range
+-- =============================================================================
+
 -- Enable pgvector extension for storing embeddings
 CREATE EXTENSION IF NOT EXISTS vector;
 
--- 1. Projects Table
--- Stores high-level project information (Core Identity)
+-- =============================================================================
+-- TABLE 1: PROJECTS
+-- Core project information with GitHub repository reference
+-- =============================================================================
 CREATE TABLE IF NOT EXISTS projects (
     id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    project_code  TEXT UNIQUE,                 
-    title         TEXT NOT NULL,
-    repo_url      TEXT,
-    project_type  TEXT CHECK (project_type IN ('product','internal','poc','demo')),
-    status        TEXT CHECK (status IN ('active','archived','deprecated')),
+    project_code  TEXT UNIQUE NOT NULL,        -- e.g., "project_008_paypal"
+    title         TEXT NOT NULL,               -- e.g., "PayPal Clone"
+    repo_url      TEXT NOT NULL,               -- GitHub repo URL for fetching code
+    domain        TEXT,                        -- fintech, ecommerce, social, etc.
+    
+    -- Tech Stack (for filtering)
+    frontend      TEXT[],                      -- ["React", "TypeScript"]
+    backend       TEXT[],                      -- ["Node.js", "Express"]
+    database      TEXT[],                      -- ["PostgreSQL", "Redis"]
+    
+    created_at    TIMESTAMP DEFAULT now(),
+    updated_at    TIMESTAMP DEFAULT now()
+);
+
+-- =============================================================================
+-- TABLE 2: PROJECT IMAGES
+-- Screenshots/mockups belonging to a project
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS project_images (
+    id            SERIAL PRIMARY KEY,
+    project_id    UUID NOT NULL
+                  REFERENCES projects(id) ON DELETE CASCADE,
+    
+    image_id      TEXT UNIQUE,                 -- e.g., "paypal_img_001"
+    image_path    TEXT NOT NULL,               -- Relative path: "images/image1.png"
+    page_name     TEXT,                        -- e.g., "Homepage - Hero Section"
+    
+    -- Full image embedding for image-level search
+    embedding     VECTOR(512),                 -- CLIP ViT-B/32 embedding
+    
     created_at    TIMESTAMP DEFAULT now()
 );
 
-
--- 2. project_metadata
--- 1:1 Relationship - Stores queryable attributes
-CREATE TABLE IF NOT EXISTS project_metadata (
-    project_id    UUID PRIMARY KEY
-                  REFERENCES projects(id) ON DELETE CASCADE,
-
-    domain        TEXT NOT NULL,          -- ecommerce, fintech, social
-    platform      TEXT[] NOT NULL,        -- web, mobile
-    frontend      TEXT[] NOT NULL,        -- react, react-native
-    backend       TEXT[],                 -- nodejs, spring
-    database      TEXT[],                 -- postgres, mongodb
-    deployment    TEXT[],                 -- cloud, onprem
-
-    estimate_days INT,
-    complexity    TEXT CHECK (complexity IN ('low','medium','high')),
-    team_size     INT,
-
-    tags          TEXT[]
-);
-
--- 3. project_embeddings
--- 1:N Relationship - Stores Semantic Vectors (Text)
-CREATE TABLE IF NOT EXISTS project_embeddings (
-    id             SERIAL PRIMARY KEY,
-    project_id     UUID
-                   REFERENCES projects(id) ON DELETE CASCADE,
-
-    embedding_type TEXT NOT NULL,      -- description | tech_stack | readme | code_summary
-    content        TEXT NOT NULL,      -- The chunk text used for embedding
-
-    embedding      VECTOR(384)         -- MiniLM / BGE
-);
-
-
--- 4. project_images
--- 1:N Relationship - Stores Visual Vectors (CLIP)
-CREATE TABLE IF NOT EXISTS project_images (
-    id                   SERIAL PRIMARY KEY,
-    project_id           UUID
-                         REFERENCES projects(id) ON DELETE CASCADE,
-
-    image_name           TEXT,
-    image_path           TEXT,
-
-    embedding            VECTOR(512),           -- CLIP (ViT-B/32)
-    components_metadata  JSONB                  -- Detected UI components metadata
-    -- Structure: {
-    --   "total_components": 5,
-    --   "by_type": {
-    --     "header": {"count": 1, "avg_size": 0.15},
-    --     "hero": {"count": 1, "avg_size": 0.45}
-    --   },
-    --   "layout_signature": "header-hero-gallery-footer",
-    --   "components": [
-    --     {
-    --       "type": "header",
-    --       "semantic_type": "header",
-    --       "bbox": [0, 0, 1920, 100],
-    --       "bbox_norm": [0, 0, 1, 0.05],
-    --       "confidence": 0.95
-    --     }
-    --   ]
-    -- }
-);
-
--- 5. project_assets
--- 1:N Relationship - Stores Blob Content (Docs)
-CREATE TABLE IF NOT EXISTS project_assets (
-    id           SERIAL PRIMARY KEY,
-    project_id   UUID
-                 REFERENCES projects(id) ON DELETE CASCADE,
-
-    asset_type   TEXT,                  -- readme | package_json | folder_tree
-    content      TEXT
-);
-
-
--- 6. project_component_embeddings
--- 1:N Relationship - Stores Component-Level Visual Vectors
--- Enables component-based search (e.g., find similar hero sections)
-CREATE TABLE IF NOT EXISTS project_component_embeddings (
-    id                SERIAL PRIMARY KEY,
-    image_id          INT
-                      REFERENCES project_images(id) ON DELETE CASCADE,
-    project_id        UUID
-                      REFERENCES projects(id) ON DELETE CASCADE,
+-- =============================================================================
+-- TABLE 3: COMPONENTS (Core table for component-level search)
+-- Individual UI components detected from images with source code references
+-- =============================================================================
+CREATE TABLE IF NOT EXISTS components (
+    id              SERIAL PRIMARY KEY,
+    image_id        INT NOT NULL
+                    REFERENCES project_images(id) ON DELETE CASCADE,
+    project_id      UUID NOT NULL
+                    REFERENCES projects(id) ON DELETE CASCADE,
     
-    component_type    TEXT NOT NULL,       -- header, hero, gallery, footer, CTA, form, etc.
-    component_index   INT NOT NULL,        -- Order of component in the image (0-based)
+    -- Component Identity
+    component_id    TEXT UNIQUE,               -- e.g., "paypal_comp_001"
+    component_type  TEXT NOT NULL,             -- header, hero, login-form, etc.
+    component_name  TEXT,                      -- "Navigation Header"
     
-    bbox              JSONB,               -- Bounding box: {"x": 0, "y": 0, "w": 1920, "h": 100}
-    bbox_norm         JSONB,               -- Normalized bbox: {"x": 0, "y": 0, "w": 1, "h": 0.05}
+    -- Semantic Information
+    semantic_tags   TEXT[],                    -- ["navigation", "logo", "menu"]
+    description     TEXT,                      -- Human-readable description
     
-    embedding         VECTOR(512),         -- CLIP embedding of cropped component
-    confidence        FLOAT                -- Semantic classification confidence (0-1)
+    -- Source Code Reference (Key for fetching code from GitHub)
+    source_file_path    TEXT,                  -- "src/components/Header/Header.tsx"
+    source_start_line   INT,                   -- 1
+    source_end_line     INT,                   -- 55
+    
+    -- Visual Information
+    bbox            JSONB,                     -- {"x": 0, "y": 0, "w": 1920, "h": 80}
+    bbox_norm       JSONB,                     -- {"x": 0, "y": 0, "w": 1.0, "h": 0.05}
+    
+    -- Component Embedding for Vector Search
+    embedding       VECTOR(512),               -- CLIP embedding of cropped component
+    confidence      FLOAT DEFAULT 1.0,         -- Detection confidence (0-1)
+    
+    created_at      TIMESTAMP DEFAULT now(),
+    updated_at      TIMESTAMP DEFAULT now()
 );
 
+-- =============================================================================
+-- INDEXES FOR HIGH PERFORMANCE
+-- =============================================================================
 
--- Create Indexes for High Performance
+-- Project Filtering
+CREATE INDEX IF NOT EXISTS idx_projects_domain ON projects(domain);
+CREATE INDEX IF NOT EXISTS idx_projects_frontend ON projects USING GIN(frontend);
+CREATE INDEX IF NOT EXISTS idx_projects_backend ON projects USING GIN(backend);
 
--- Metadata Filtering (GIN is perfect for Array overlap @>)
-CREATE INDEX IF NOT EXISTS idx_meta_domain
-ON project_metadata(domain);
+-- Image Lookup
+CREATE INDEX IF NOT EXISTS idx_images_project ON project_images(project_id);
 
-CREATE INDEX IF NOT EXISTS idx_meta_platform
-ON project_metadata USING GIN(platform);
+-- Component Filtering
+CREATE INDEX IF NOT EXISTS idx_components_project ON components(project_id);
+CREATE INDEX IF NOT EXISTS idx_components_image ON components(image_id);
+CREATE INDEX IF NOT EXISTS idx_components_type ON components(component_type);
+CREATE INDEX IF NOT EXISTS idx_components_tags ON components USING GIN(semantic_tags);
 
-CREATE INDEX IF NOT EXISTS idx_meta_frontend
-ON project_metadata USING GIN(frontend);
-
-CREATE INDEX IF NOT EXISTS idx_meta_backend
-ON project_metadata USING GIN(backend);
-
--- Vector Similarity Search (HNSW is faster/better recall than IVFFlat for production)
-CREATE INDEX IF NOT EXISTS idx_text_embedding
-ON project_embeddings
-USING hnsw (embedding vector_cosine_ops);
-
+-- Vector Similarity Search (HNSW for fast approximate nearest neighbor)
 CREATE INDEX IF NOT EXISTS idx_image_embedding
-ON project_images
-USING hnsw (embedding vector_cosine_ops);
-
--- Component Metadata JSONB Queries
-CREATE INDEX IF NOT EXISTS idx_components_metadata
-ON project_images USING GIN(components_metadata);
-
--- Component-Level Indexes
-CREATE INDEX IF NOT EXISTS idx_component_type
-ON project_component_embeddings(component_type);
-
-CREATE INDEX IF NOT EXISTS idx_component_image
-ON project_component_embeddings(image_id);
+ON project_images USING hnsw (embedding vector_cosine_ops);
 
 CREATE INDEX IF NOT EXISTS idx_component_embedding
-ON project_component_embeddings
-USING hnsw (embedding vector_cosine_ops);
+ON components USING hnsw (embedding vector_cosine_ops);
 
+-- =============================================================================
+-- HELPER FUNCTIONS
+-- =============================================================================
 
-ANALYZE;
+-- Function to get GitHub raw URL for fetching source code
+CREATE OR REPLACE FUNCTION get_source_url(p_component_id TEXT)
+RETURNS TABLE (
+    raw_url TEXT,
+    start_line INT,
+    end_line INT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        REPLACE(p.repo_url, 'github.com', 'raw.githubusercontent.com') 
+            || '/main/' || c.source_file_path AS raw_url,
+        c.source_start_line AS start_line,
+        c.source_end_line AS end_line
+    FROM components c
+    JOIN projects p ON c.project_id = p.id
+    WHERE c.component_id = p_component_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- =============================================================================
+-- EXAMPLE QUERIES
+-- =============================================================================
+
+-- 1. Find similar components by embedding (vector search)
+-- SELECT c.*, p.repo_url,
+--        1 - (c.embedding <=> '[0.1, 0.2, ...]'::vector) AS similarity
+-- FROM components c
+-- JOIN projects p ON c.project_id = p.id
+-- WHERE c.component_type = 'header'
+-- ORDER BY c.embedding <=> '[0.1, 0.2, ...]'::vector
+-- LIMIT 5;
+
+-- 2. Get source code info for a matched component
+-- SELECT p.repo_url, c.source_file_path, c.source_start_line, c.source_end_line
+-- FROM components c
+-- JOIN projects p ON c.project_id = p.id
+-- WHERE c.component_id = 'paypal_comp_002';
+
+-- 3. Filter by semantic tags
+-- SELECT * FROM components
+-- WHERE semantic_tags @> ARRAY['navigation', 'header']
+-- ORDER BY created_at DESC;
+
+-- =============================================================================
+-- ANALYZE FOR QUERY OPTIMIZATION
+-- =============================================================================
+ANALYZE projects;
+ANALYZE project_images;
+ANALYZE components;

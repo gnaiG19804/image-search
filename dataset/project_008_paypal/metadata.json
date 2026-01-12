@@ -1,54 +1,418 @@
 {
+    "project_id": "project_008_paypal",
     "title": "PayPal Clone",
-    "repo_url": "https://github.com/paypal/payment-gateway",
-    "project_type": "product",
-    "status": "active",
+    "repo_url": "https://github.com/gnaiG19804/testpaypal",
     "domain": "fintech",
-    "platform": [
-        "web",
-        "backend"
-    ],
-    "frontend": [
-        "React"
-    ],
-    "backend": [
-        "Java",
-        "Spring Boot"
-    ],
-    "database": [
-        "Oracle",
-        "PostgreSQL"
-    ],
-    "deployment": [
-        "Docker"
-    ],
-    "estimate": {
-        "days": 110,
-        "complexity": "high"
-    },
-    "team_size": 7,
-    "tags": [
-        "fintech",
-        "payment",
-        "secure",
-        "banking"
-    ],
-    "semantic_documents": [
-        {
-            "type": "description",
-            "content": "Secure online payment system enabling money transfers and merchant integration. Focuses on transaction integrity, fraud detection, and multi-currency support."
-        },
-        {
-            "type": "tech_stack",
-            "content": "Java Spring Boot for enterprise-grade security and transaction management. Oracle/PostgreSQL for ACID-compliant financial record keeping."
-        }
-    ],
-    "assets": {
-        "readme": "Security audit guidelines.",
-        "folder_structure": [
-            "src/main/java",
-            "src/test"
+    "tech_stack": {
+        "frontend": [
+            "React",
+            "TypeScript"
+        ],
+        "backend": [
+            "Node.js",
+            "Express"
+        ],
+        "database": [
+            "PostgreSQL",
+            "Redis"
         ]
     },
-    "project_id": "project_008_paypal"
+    "images": [
+        {
+            "image_id": "paypal_img_001",
+            "image_path": "images/image1.png",
+            "page_name": "Homepage - Hero Section",
+            "components": [
+                {
+                    "component_id": "paypal_comp_001",
+                    "type": "notification-bar",
+                    "name": "Location Switch Banner",
+                    "semantic_tags": [
+                        "notification",
+                        "banner",
+                        "location",
+                        "dismissible"
+                    ],
+                    "description": "Top notification bar showing location-based site switching option with close button",
+                    "source_code": {
+                        "file_path": "src/components/NotificationBar/NotificationBar.tsx",
+                        "start_line": 1,
+                        "end_line": 27
+                    }
+                },
+                {
+                    "component_id": "paypal_comp_002",
+                    "type": "header",
+                    "name": "Navigation Header",
+                    "semantic_tags": [
+                        "navigation",
+                        "logo",
+                        "menu",
+                        "dropdown",
+                        "auth-buttons"
+                    ],
+                    "description": "Main navigation with PayPal logo, dropdown menus, help link, and login/register buttons",
+                    "source_code": {
+                        "file_path": "src/components/Header/Header.tsx",
+                        "start_line": 1,
+                        "end_line": 55
+                    }
+                },
+                {
+                    "component_id": "paypal_comp_003",
+                    "type": "hero-section",
+                    "name": "Hero Banner with CTA",
+                    "semantic_tags": [
+                        "hero",
+                        "banner",
+                        "headline",
+                        "cta-button",
+                        "background-image"
+                    ],
+                    "description": "Full-width hero section with gradient blue background, headline text, description and primary CTA button",
+                    "source_code": {
+                        "file_path": "src/components/Hero/Hero.tsx",
+                        "start_line": 1,
+                        "end_line": 45
+                    }
+                },
+                {
+                    "component_id": "paypal_comp_004",
+                    "type": "footer-help-link",
+                    "name": "Help Center Link",
+                    "semantic_tags": [
+                        "footer",
+                        "help",
+                        "link",
+                        "support"
+                    ],
+                    "description": "Bottom help link bar with question text and link to support center",
+                    "source_code": {
+                        "file_path": "src/components/FooterHelpLink/FooterHelpLink.tsx",
+                        "start_line": 1,
+                        "end_line": 20
+                    }
+                }
+            ]
+        },
+        {
+            "image_id": "paypal_img_002",
+            "image_path": "images/image2.png",
+            "page_name": "Login Page",
+            "components": [
+                {
+                    "component_id": "paypal_comp_005",
+                    "type": "login-form",
+                    "name": "Login Form Card",
+                    "semantic_tags": [
+                        "form",
+                        "login",
+                        "authentication",
+                        "card",
+                        "centered"
+                    ],
+                    "description": "Centered login card with PayPal logo, email input field, forgot email link, and primary submit button",
+                    "source_code": {
+                        "file_path": "src/components/LoginForm/LoginForm.tsx",
+                        "start_line": 1,
+                        "end_line": 47
+                    }
+                },
+                {
+                    "component_id": "paypal_comp_006",
+                    "type": "divider-with-text",
+                    "name": "Or Divider",
+                    "semantic_tags": [
+                        "divider",
+                        "separator",
+                        "text-divider"
+                    ],
+                    "description": "Horizontal divider with 'hoặc' (or) text in the center",
+                    "source_code": {
+                        "file_path": "src/components/Divider/Divider.tsx",
+                        "start_line": 1,
+                        "end_line": 15
+                    }
+                },
+                {
+                    "component_id": "paypal_comp_007",
+                    "type": "button",
+                    "name": "Button Component",
+                    "semantic_tags": [
+                        "button",
+                        "primary",
+                        "secondary",
+                        "outlined"
+                    ],
+                    "description": "Reusable button component with multiple variants",
+                    "source_code": {
+                        "file_path": "src/components/Button/Button.tsx",
+                        "start_line": 1,
+                        "end_line": 40
+                    }
+                },
+                {
+                    "component_id": "paypal_comp_008",
+                    "type": "language-switcher",
+                    "name": "Language Selector",
+                    "semantic_tags": [
+                        "language",
+                        "locale",
+                        "switcher",
+                        "toggle"
+                    ],
+                    "description": "Language toggle between Tiếng Việt and English",
+                    "source_code": {
+                        "file_path": "src/components/LanguageSwitcher/LanguageSwitcher.tsx",
+                        "start_line": 1,
+                        "end_line": 27
+                    }
+                }
+            ]
+        },
+        {
+            "image_id": "paypal_img_003",
+            "image_path": "images/image3.png",
+            "page_name": "Dashboard - Account Overview",
+            "components": [
+                {
+                    "component_id": "paypal_comp_009",
+                    "type": "dashboard-header",
+                    "name": "Dashboard Navigation",
+                    "semantic_tags": [
+                        "navigation",
+                        "tabs",
+                        "dashboard",
+                        "user-menu"
+                    ],
+                    "description": "Dashboard top navigation with tabs (Trang chủ, Gửi và Yêu cầu, Ví, Hoạt động, Trợ giúp) and user actions",
+                    "source_code": {
+                        "file_path": "src/components/DashboardNav/DashboardNav.tsx",
+                        "start_line": 1,
+                        "end_line": 53
+                    }
+                },
+                {
+                    "component_id": "paypal_comp_010",
+                    "type": "alert-banner",
+                    "name": "Bank Link Alert",
+                    "semantic_tags": [
+                        "alert",
+                        "info",
+                        "banner",
+                        "action-required"
+                    ],
+                    "description": "Info alert banner prompting user to link bank account for secure transactions",
+                    "source_code": {
+                        "file_path": "src/components/AlertBanner/AlertBanner.tsx",
+                        "start_line": 1,
+                        "end_line": 33
+                    }
+                },
+                {
+                    "component_id": "paypal_comp_011",
+                    "type": "balance-card",
+                    "name": "PayPal Balance Display",
+                    "semantic_tags": [
+                        "balance",
+                        "card",
+                        "amount",
+                        "currency",
+                        "cta"
+                    ],
+                    "description": "Card showing PayPal wallet balance with currency, available amount, and transfer button",
+                    "source_code": {
+                        "file_path": "src/components/BalanceCard/BalanceCard.tsx",
+                        "start_line": 1,
+                        "end_line": 32
+                    }
+                },
+                {
+                    "component_id": "paypal_comp_012",
+                    "type": "activity-section",
+                    "name": "Recent Activity",
+                    "semantic_tags": [
+                        "activity",
+                        "transactions",
+                        "history",
+                        "timeline"
+                    ],
+                    "description": "Section showing recent transaction activity with view more option",
+                    "source_code": {
+                        "file_path": "src/components/ActivitySection/ActivitySection.tsx",
+                        "start_line": 1,
+                        "end_line": 44
+                    }
+                },
+                {
+                    "component_id": "paypal_comp_013",
+                    "type": "sidebar-widget",
+                    "name": "Quick Actions Sidebar",
+                    "semantic_tags": [
+                        "sidebar",
+                        "widget",
+                        "search",
+                        "quick-actions"
+                    ],
+                    "description": "Right sidebar with search and quick action widgets",
+                    "source_code": {
+                        "file_path": "src/components/Sidebar/QuickActions.tsx",
+                        "start_line": 1,
+                        "end_line": 32
+                    }
+                },
+                {
+                    "component_id": "paypal_comp_014",
+                    "type": "linked-accounts",
+                    "name": "Bank & Cards Section",
+                    "semantic_tags": [
+                        "bank",
+                        "card",
+                        "linked-accounts",
+                        "payment-methods"
+                    ],
+                    "description": "Section displaying linked bank accounts and cards with Visa Debit Platinum card info",
+                    "source_code": {
+                        "file_path": "src/components/LinkedAccounts/LinkedAccounts.tsx",
+                        "start_line": 1,
+                        "end_line": 45
+                    }
+                }
+            ]
+        },
+        {
+            "image_id": "paypal_img_004",
+            "image_path": "images/image4.png",
+            "page_name": "Help Center",
+            "components": [
+                {
+                    "component_id": "paypal_comp_015",
+                    "type": "search-bar",
+                    "name": "Help Search",
+                    "semantic_tags": [
+                        "search",
+                        "input",
+                        "help",
+                        "autocomplete"
+                    ],
+                    "description": "Large search input for searching help topics and FAQs",
+                    "source_code": {
+                        "file_path": "src/components/SearchBar/SearchBar.tsx",
+                        "start_line": 1,
+                        "end_line": 32
+                    }
+                },
+                {
+                    "component_id": "paypal_comp_016",
+                    "type": "sidebar-menu",
+                    "name": "Help Categories Menu",
+                    "semantic_tags": [
+                        "sidebar",
+                        "menu",
+                        "navigation",
+                        "categories"
+                    ],
+                    "description": "Left sidebar navigation with help categories: Home, Payments and Transfers, Disputes, My Account, etc.",
+                    "source_code": {
+                        "file_path": "src/components/SidebarMenu/SidebarMenu.tsx",
+                        "start_line": 1,
+                        "end_line": 43
+                    }
+                },
+                {
+                    "component_id": "paypal_comp_017",
+                    "type": "faq-list",
+                    "name": "FAQ Section",
+                    "semantic_tags": [
+                        "faq",
+                        "list",
+                        "links",
+                        "questions"
+                    ],
+                    "description": "FAQ list showing personalized questions and common questions with clickable links",
+                    "source_code": {
+                        "file_path": "src/components/FAQList/FAQList.tsx",
+                        "start_line": 1,
+                        "end_line": 27
+                    }
+                }
+            ]
+        },
+        {
+            "image_id": "paypal_img_005",
+            "image_path": "images/image5.png",
+            "page_name": "Account Settings",
+            "components": [
+                {
+                    "component_id": "paypal_comp_018",
+                    "type": "profile-card",
+                    "name": "User Profile Card",
+                    "semantic_tags": [
+                        "profile",
+                        "avatar",
+                        "user-info",
+                        "card"
+                    ],
+                    "description": "Profile card with user avatar, name, PayPal.me link, and edit options",
+                    "source_code": {
+                        "file_path": "src/components/ProfileCard/ProfileCard.tsx",
+                        "start_line": 1,
+                        "end_line": 42
+                    }
+                },
+                {
+                    "component_id": "paypal_comp_019",
+                    "type": "settings-form",
+                    "name": "Account Options Form",
+                    "semantic_tags": [
+                        "form",
+                        "settings",
+                        "preferences",
+                        "dropdown"
+                    ],
+                    "description": "Account settings form with language, timezone, and country selection dropdowns",
+                    "source_code": {
+                        "file_path": "src/components/SettingsForm/SettingsForm.tsx",
+                        "start_line": 1,
+                        "end_line": 63
+                    }
+                },
+                {
+                    "component_id": "paypal_comp_020",
+                    "type": "info-list",
+                    "name": "Contact Information",
+                    "semantic_tags": [
+                        "list",
+                        "email",
+                        "phone",
+                        "editable",
+                        "verified"
+                    ],
+                    "description": "Editable list showing email addresses and phone numbers with verification status badges",
+                    "source_code": {
+                        "file_path": "src/components/InfoList/InfoList.tsx",
+                        "start_line": 1,
+                        "end_line": 42
+                    }
+                },
+                {
+                    "component_id": "paypal_comp_021",
+                    "type": "address-list",
+                    "name": "Address Management",
+                    "semantic_tags": [
+                        "address",
+                        "list",
+                        "location",
+                        "editable"
+                    ],
+                    "description": "Address management section showing saved addresses with edit options",
+                    "source_code": {
+                        "file_path": "src/components/AddressList/AddressList.tsx",
+                        "start_line": 1,
+                        "end_line": 47
+                    }
+                }
+            ]
+        }
+    ]
 }

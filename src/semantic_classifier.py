@@ -78,46 +78,37 @@ class SemanticClassifier:
             # Load CLIP model
             self.clip_model, self.clip_preprocess = clip.load("ViT-B/32", device=self.device)
             
-            # ENHANCED text prompts - VERY DETAILED for better accuracy
+            # ENHANCED text prompts - ALIGNED WITH USER REQUEST
             self.clip_prompts = {
-                # Layout Structure
-                'header': "a website header navigation bar at the top with logo menu links and search box on white or colored background",
+                # === STRUCTURE & NAVIGATION ===
+                'header': "a website header navigation bar at the top with logo menu links and search box",
                 'navigation': "a horizontal navigation menu bar with multiple menu links tabs and dropdown menus",
-                'hero': "a large hero banner section with big bold headline text call to action button and attractive background image or gradient at the top of page",
-                'banner': "a promotional banner or advertising banner with colorful design product images sale text discount percentage bright colors",
-                'promo_banner': "a sale promotion banner with bold discount percentages special offer text limited time sale flash sale coupon code on vibrant red orange yellow background",
-                'breadcrumb': "a breadcrumb navigation trail showing page hierarchy with home arrow links separated by slashes or arrows",
-                'sidebar': "a sidebar column or vertical navigation menu with links widgets on the left or right side of page",
-                'main_content': "the main content area body section with paragraphs text images and content",
-                'footer': "a website footer section at bottom with dark background multiple columns sitemap links copyright text contact info social icons",
-                'copyright': "a copyright text area with small text showing year company name and rights reserved",
+                'breadcrumb': "a breadcrumb navigation trail text showing page hierarchy path with arrows or slashes like Home > category > product",
+                'sidebar': "a vertical sidebar column navigation menu on the left or right side with list of links categories filters",
+                'footer': "a website footer section at the bottom with dark background columns links copyright contact info sitemap",
+                'copyright': "small copyright text area at the very bottom of page showing year and company name rights reserved",
                 
-                # Content Blocks
-                'section': "a content section block with heading subheading and body text paragraphs",
-                'article': "an article or blog post with title author date paragraphs images and formatted text content",
-                'widget': "a small widget box component with border icon title and compact content",
-                'gallery': "a photo gallery grid layout showing multiple images arranged in rows and columns with thumbnails",
-                'testimonials': "customer testimonials reviews section with user profile photos quotes star ratings and customer feedback",
-                'pricing_table': "a pricing plan comparison table with multiple pricing tiers columns showing price features and buy buttons",
-                'faq': "frequently asked questions FAQ section with collapsible expandable questions and answers accordion style",
+                # === CONTENT SECTIONS ===
+                'hero_banner': "a large hero banner slider section at top of page with big headline text call to action button and background image",
+                'promo_banner': "a promotional banner advertisement strip with sale discount offer text percentage off coupon code",
+                'main_content': "the main body content area of the web page with paragraphs text articles",
+                'section': "a distinct content section block with heading subheading and content body",
+                'article': "an article post or blog entry with title author date and body text paragraphs",
+                'gallery': "an image gallery grid layout with multiple photos thumbnails arranged in rows and columns",
+                'testimonials': "customer testimonials reviews section with user profile pictures quotes stars rating and feedback text",
+                'pricing_table': "a pricing plan comparison table with columns showing price tiers features list and subscribe buttons",
+                'faq': "frequently asked questions FAQ section with list of questions and expandable answers",
+                'features': "a features list section with icons and short text descriptions of product benefits",
                 
-                # Interactive Elements
-                'cta_button': "a bright colorful call to action button with bold text like buy now sign up get started subscribe on vibrant background",
-                'form': "a form interface with multiple input fields textboxes labels and submit button for data entry",
-                'login_form': "a login signin form card with email username input password field remember me checkbox and login button",
-                'search_form': "a search bar input box with magnifying glass icon search button and placeholder text",
-                'input_field': "a single text input box field for typing text with border and placeholder text",
-                
-                # Social & Support  
-                'social_links': "social media icons links for facebook twitter instagram youtube linkedin pinterest",
-                'chat_widget': "a live chat support button widget icon in bottom right corner with message bubble icon",
-                'modal': "a popup modal dialog box overlay window with close button title content on top of dimmed background",
-                'popup': "a popup overlay window notification banner with message close button and call to action",
-                
-                # Specialized
-                'product_card': "an ecommerce product card showing product image name price rating stars add to cart button",
-                'menu': "a dropdown menu panel with list of menu items links and submenu options",
-                'logo': "a company brand logo icon or logotype image at top left corner",
+                # === INTERACTIVE ELEMENTS ===
+                'cta_button': "a prominent call to action button with bold text like buy now sign up get started",
+                'form': "a form input area with text fields labels checkboxes and submit button",
+                'login_form': "a login or sign in form with username email password fields and login button",
+                'search_bar': "a search input field bar with magnifying glass icon and placeholder text",
+                'widget': "a small standalone widget box with title and content or tools",
+                'popup': "a popup modal overlay window with message content and close button",
+                'chat_widget': "a live chat support button floating loop or icon in the bottom right corner",
+                'social_links': "social media icons row with logos for facebook twitter instagram linkedin",
             }
             
             print(f"[INFO] CLIP model loaded on {self.device} for semantic classification")
@@ -128,25 +119,35 @@ class SemanticClassifier:
     
     def classify(self, component: Dict, img_shape: Tuple[int, int], all_components: List[Dict] = None) -> str:
         """
-        CLIP-FIRST Hybrid Classification (Visual Content Priority)
-        
-        Priority 1: CLIP zero-shot (visual matching) - PRIMARY METHOD
-        Priority 2: Strong structural rules (only very obvious cases)
-        Priority 3: Weak rules (last resort fallback)
-        
-        Args:
-            component: Component dict with bbox, image, etc.
-            img_shape: (height, width) of original image
-            all_components: List of all components for context analysis
-            
-        Returns:
-            Component type string
+        Hybrid Classification: Rules -> CLIP -> Validation
         """
-        # Priority 1: CLIP FIRST (visual content matching)
+        # 0. Structural Constraints (Hard Filters)
+        # Prevents "Sidebar" detection on a square product photo
+        bbox = component['bbox']
+        w, h = bbox[2], bbox[3]
+        aspect_ratio = w / (h + 1e-6)
+        
+        # Valid candidates based on shape
+        valid_types = set(self.clip_prompts.keys())
+        
+        # Sidebar MUST be tall (AR < 0.6)
+        if aspect_ratio >= 0.6:
+            valid_types.discard('sidebar')
+            
+        # Header/Nav MUST be wide (AR > 2.0)
+        if aspect_ratio <= 2.0:
+            valid_types.discard('header')
+            valid_types.discard('navigation')
+            
+        # 1. CLIP Classification
         if self.use_clip:
-            clip_type, confidence = self._classify_by_clip(component)
-            # Balanced threshold for good precision/recall
-            if confidence > 0.25:  # Working threshold from POC
+            clip_type, confidence = self._classify_by_clip(component, valid_types)
+            
+            # Post-check: Is it actually a UI element?
+            if clip_type in ['product_photo', 'background_graphic']:
+                return 'element' # Treat as generic content
+                
+            if confidence > 0.22:
                 return clip_type
         
         # Priority 2: Strong structural rules (very obvious only)
@@ -235,9 +236,9 @@ class SemanticClassifier:
         
         return None
     
-    def _classify_by_clip(self, component: Dict) -> Tuple[str, float]:
+    def _classify_by_clip(self, component: Dict, allowed_types: set = None) -> Tuple[str, float]:
         """
-        CLIP zero-shot classification
+        CLIP zero-shot classification with restricted candidates
         
         Returns:
             (component_type, confidence)
@@ -260,11 +261,21 @@ class SemanticClassifier:
             img_rgb = cv2.cvtColor(img_array, cv2.COLOR_BGR2RGB)
             pil_image = Image.fromarray(img_rgb)
             
+            # Filter prompts based on allowed_types
+            active_prompts = {k: v for k, v in self.clip_prompts.items() 
+                             if allowed_types is None or k in allowed_types}
+            
+            if not active_prompts:
+                return 'unknown', 0.0
+                
+            labels = list(active_prompts.keys())
+            texts = list(active_prompts.values())
+            
             # Preprocess
             image_input = self.clip_preprocess(pil_image).unsqueeze(0).to(self.device)
             
             # Tokenize prompts
-            text_inputs = clip.tokenize(list(self.clip_prompts.values())).to(self.device)
+            text_inputs = clip.tokenize(texts).to(self.device)
             
             # Calculate similarity
             with torch.no_grad():
@@ -275,16 +286,16 @@ class SemanticClassifier:
                 image_features = image_features / image_features.norm(dim=-1, keepdim=True)
                 text_features = text_features / text_features.norm(dim=-1, keepdim=True)
                 
-                # Cosine similarity with SOFTMAX (proper probability distribution)
+                # Cosine similarity with SOFTMAX
                 similarity = (image_features @ text_features.T).softmax(dim=-1)
             
             # Get best match
             best_idx = similarity.argmax().item()
             confidence = similarity[0, best_idx].item()
             
-            component_type = list(self.clip_prompts.keys())[best_idx]
+            best_label = labels[best_idx]
             
-            return component_type, confidence
+            return best_label, confidence
             
         except Exception as e:
             print(f"[WARN] CLIP classification failed: {e}")

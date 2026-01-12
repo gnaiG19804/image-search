@@ -1,3 +1,13 @@
+"""
+Migration Script for Component-Based Image Search System
+=========================================================
+This script imports data from metadata.json files into the new PostgreSQL schema
+with projects, project_images, and components tables.
+
+Usage:
+    python migrate_to_postgres.py              # Full migration (drop + recreate)
+    python migrate_to_postgres.py --no-drop    # Import without dropping tables
+"""
 
 import os
 import sys
@@ -8,301 +18,297 @@ from pathlib import Path
 sys.path.append(os.getcwd())
 
 from src.postgres_db import PostgresDB
-from src.text_embedder import TextEmbedder
 from src.embedding import ImageEmbedder
 
+
 def main():
-    print("="*60)
-    print(" Migration to PostgreSQL Schema V2 (Normalized)")
-    print("="*60)
+    """Main migration function"""
+    print("=" * 70)
+    print(" Component-Based Image Search - Database Migration")
+    print("=" * 70)
     
-    # 1. Initialize Database (will create connection)
+    # Check for --no-drop flag
+    drop_tables = "--no-drop" not in sys.argv
+    
+    # 1. Initialize Database
     db = PostgresDB()
     
-    # 2. Apply Schema from schema.sql
-    print("\n [Step 1] Applying Schema...")
+    # 2. Apply Schema
+    print("\n[Step 1] Applying Schema...")
+    if drop_tables:
+        print("  -> Dropping existing tables...")
+        with db.conn.cursor() as cur:
+            cur.execute("""
+                DROP TABLE IF EXISTS components CASCADE;
+                DROP TABLE IF EXISTS project_images CASCADE;
+                DROP TABLE IF EXISTS projects CASCADE;
+                DROP TABLE IF EXISTS project_component_embeddings CASCADE;
+                DROP TABLE IF EXISTS project_embeddings CASCADE;
+                DROP TABLE IF EXISTS project_metadata CASCADE;
+                DROP TABLE IF EXISTS project_assets CASCADE;
+            """)
+        db.conn.commit()
+    
+    print("  -> Creating new tables from schema.sql...")
     db.init_schema_from_file("schema.sql")
     
-    # 3. Initialize Embedders
-    print("\n [Step 2] Loading AI Models...")
-    print("  -> Loading Text Embedder (paraphrase-multilingual-MiniLM-L12-v2)...")
-    text_embedder = TextEmbedder()
-    
-    print("  -> Loading Image Embedder (CLIP ViT-B/32)...")
+    # 3. Load Image Embedder
+    print("\n[Step 2] Loading AI Models...")
+    print("  -> Loading CLIP Image Embedder (ViT-B/32)...")
     image_embedder = ImageEmbedder()
+    print("  -> Models loaded!")
     
     # 4. Scan Dataset
     dataset_dir = Path("dataset")
     if not dataset_dir.exists():
-        print(" [ERROR] Dataset directory not found!")
+        print("\n[ERROR] Dataset directory not found!")
         return
     
     projects = sorted(list(dataset_dir.glob("project_*")))
-    print(f"\n [Step 3] Found {len(projects)} projects to migrate")
+    print(f"\n[Step 3] Found {len(projects)} projects to migrate")
     
     # 5. Migrate Each Project
-    print("\n [Step 4] Migrating Projects...\n")
+    print("\n[Step 4] Migrating Projects...\n")
+    print("-" * 70)
+    
+    total_projects = 0
+    total_images = 0
+    total_components = 0
     
     for idx, project_dir in enumerate(projects, 1):
         meta_path = project_dir / "metadata.json"
         images_dir = project_dir / "images"
         
         if not meta_path.exists():
-            print(f"  [WARN] [{idx}/{len(projects)}] Skipping {project_dir.name} - No metadata.json")
+            print(f"  [{idx}] SKIP: {project_dir.name} - No metadata.json")
             continue
         
         # Load metadata
         with open(meta_path, 'r', encoding='utf-8') as f:
             metadata = json.load(f)
         
-        print(f"  [{idx}/{len(projects)}] Processing: {metadata.get('title', 'Unknown')}")
+        project_code = metadata.get("project_id")
+        title = metadata.get("title", "Unknown")
+        repo_url = metadata.get("repo_url", "")
+        domain = metadata.get("domain", "")
+        tech_stack = metadata.get("tech_stack", {})
+        
+        print(f"\n  [{idx}/{len(projects)}] {title}")
+        print(f"       Code: {project_code}")
+        print(f"       Repo: {repo_url}")
         
         try:
-            # Insert project with all related data
-            proj_uuid = db.add_project(
-                metadata=metadata,
-                text_embedder=text_embedder,
-                image_embedder=image_embedder,
-                images_dir=images_dir if images_dir.exists() else None
-            )
+            # Insert Project
+            with db.conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO projects (project_code, title, repo_url, domain, frontend, backend, database)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (project_code) DO UPDATE SET
+                        title = EXCLUDED.title,
+                        repo_url = EXCLUDED.repo_url,
+                        domain = EXCLUDED.domain,
+                        frontend = EXCLUDED.frontend,
+                        backend = EXCLUDED.backend,
+                        database = EXCLUDED.database,
+                        updated_at = now()
+                    RETURNING id
+                """, (
+                    project_code,
+                    title,
+                    repo_url,
+                    domain,
+                    tech_stack.get("frontend", []),
+                    tech_stack.get("backend", []),
+                    tech_stack.get("database", [])
+                ))
+                project_uuid = cur.fetchone()[0]
             
-            # Count images processed
-            if images_dir.exists():
-                img_count = len(list(images_dir.glob("*.png")) + list(images_dir.glob("*.jpg")))
-                print(f"      [OK] Inserted project with {img_count} images")
-            else:
-                print(f"      [OK] Inserted project (no images)")
+            db.conn.commit()
+            total_projects += 1
+            
+            # Process Images
+            images_data = metadata.get("images", [])
+            project_images_count = 0
+            project_components_count = 0
+            
+            for img_data in images_data:
+                image_id = img_data.get("image_id")
+                image_path = img_data.get("image_path")
+                page_name = img_data.get("page_name")
+                components = img_data.get("components", [])
                 
+                # Full image path
+                full_image_path = project_dir / image_path
+                
+                # Generate image embedding
+                image_embedding = None
+                if full_image_path.exists():
+                    try:
+                        embedding_result = image_embedder.embed_image(str(full_image_path))
+                        # embed_image returns numpy array with shape (1, 512), flatten it
+                        image_embedding = embedding_result.flatten().tolist()
+                    except Exception as e:
+                        print(f"       [WARN] Could not embed image: {e}")
+                
+                # Insert Image
+                with db.conn.cursor() as cur:
+                    cur.execute("""
+                        INSERT INTO project_images (project_id, image_id, image_path, page_name, embedding)
+                        VALUES (%s, %s, %s, %s, %s::vector)
+                        ON CONFLICT (image_id) DO UPDATE SET
+                            page_name = EXCLUDED.page_name,
+                            embedding = EXCLUDED.embedding
+                        RETURNING id
+                    """, (
+                        project_uuid,
+                        image_id,
+                        str(project_dir / image_path),
+                        page_name,
+                        image_embedding
+                    ))
+                    db_image_id = cur.fetchone()[0]
+                
+                db.conn.commit()
+                project_images_count += 1
+                
+                # Process Components
+                for comp in components:
+                    component_id = comp.get("component_id")
+                    component_type = comp.get("type")
+                    component_name = comp.get("name")
+                    semantic_tags = comp.get("semantic_tags", [])
+                    description = comp.get("description", "")
+                    source_code = comp.get("source_code", {})
+                    
+                    # Insert Component
+                    with db.conn.cursor() as cur:
+                        cur.execute("""
+                            INSERT INTO components (
+                                image_id, project_id, component_id, component_type, component_name,
+                                semantic_tags, description,
+                                source_file_path, source_start_line, source_end_line
+                            )
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                            ON CONFLICT (component_id) DO UPDATE SET
+                                component_type = EXCLUDED.component_type,
+                                component_name = EXCLUDED.component_name,
+                                semantic_tags = EXCLUDED.semantic_tags,
+                                description = EXCLUDED.description,
+                                source_file_path = EXCLUDED.source_file_path,
+                                source_start_line = EXCLUDED.source_start_line,
+                                source_end_line = EXCLUDED.source_end_line
+                            RETURNING id
+                        """, (
+                            db_image_id,
+                            project_uuid,
+                            component_id,
+                            component_type,
+                            component_name,
+                            semantic_tags,
+                            description,
+                            source_code.get("file_path"),
+                            source_code.get("start_line"),
+                            source_code.get("end_line")
+                        ))
+                    
+                    project_components_count += 1
+                
+                db.conn.commit()
+            
+            total_images += project_images_count
+            total_components += project_components_count
+            
+            print(f"       ✓ {project_images_count} images, {project_components_count} components")
+            
         except Exception as e:
-            print(f"      [ERROR]    Error: {e}")
+            print(f"       ✗ Error: {e}")
+            db.conn.rollback()
             continue
     
     # 6. Summary
-    print("\n" + "="*60)
-    print(" Migration Summary:")
-    print("="*60)
-    
-    project_count = db.count_projects()
-    image_count = db.count_images()
-    
-    print(f"[OK] Total Projects: {project_count}")
-    print(f"[OK] Total Images: {image_count}")
-    print("\n[DONE] Migration Complete! Database is ready for production.\n")
+    print("\n" + "-" * 70)
+    print("\n" + "=" * 70)
+    print(" Migration Summary")
+    print("=" * 70)
+    print(f"  ✓ Projects:   {total_projects}")
+    print(f"  ✓ Images:     {total_images}")
+    print(f"  ✓ Components: {total_components}")
+    print("\n[DONE] Migration Complete!\n")
     
     db.close()
 
 
-
-def update_component_metadata():
+def generate_component_embeddings():
     """
-    Update component metadata for existing images in database
-    Process one project at a time with automatic resume capability
+    Generate CLIP embeddings for all components by cropping from images.
+    Run this after initial migration.
     """
-    print("="*60)
-    print(" Update Component Metadata (Project-by-Project)")
-    print("="*60)
+    print("=" * 70)
+    print(" Generate Component Embeddings")
+    print("=" * 70)
     
-    # Import here to avoid loading heavy models if not needed
-    from src.component_detector import UIComponentDetector
-    from src.component_utils import build_components_metadata, metadata_to_json
     from src.component_embedder import ComponentEmbedder
+    from PIL import Image
     
-    # Initialize database
     db = PostgresDB()
-    
-    # Initialize detector
-    print("\n [Step 1] Loading Component Detector (SAM + CLIP)...")
-    print("-> This may take a while on first run (downloading models)...")
-    detector = UIComponentDetector(
-        method='sam',
-        classify_semantics=True,
-        use_clip=True
-    )
-    print("Detector loaded!")
-    
-    print("\n [Step 1b] Loading Component Embedder (CLIP)...")
     embedder = ComponentEmbedder()
-    print("Embedder loaded!")
     
-    # Get projects that need component detection (group by project)
-    print("\n [Step 2] Finding projects to process...")
-    
-    # Check for limit from command line argument
-    limit = None
-    if len(sys.argv) > 2:
-        try:
-            limit = int(sys.argv[2])
-            print(f"  -> Limiting to first {limit} projects")
-        except ValueError:
-            pass
-    
+    # Get components without embeddings
     with db.conn.cursor() as cur:
-        query = """
-            SELECT 
-                p.id as project_id,
-                p.title,
-                COUNT(pi.id) as total_images,
-                COUNT(CASE WHEN pi.components_metadata IS NULL THEN 1 END) as pending_images
-            FROM projects p
-            JOIN project_images pi ON p.id = pi.project_id
-            GROUP BY p.id, p.title
-            HAVING COUNT(CASE WHEN pi.components_metadata IS NULL THEN 1 END) > 0
-            ORDER BY p.title
-        """
+        cur.execute("""
+            SELECT c.id, c.component_id, c.bbox, pi.image_path
+            FROM components c
+            JOIN project_images pi ON c.image_id = pi.id
+            WHERE c.embedding IS NULL
+            ORDER BY c.id
+        """)
+        components = cur.fetchall()
+    
+    print(f"\nFound {len(components)} components without embeddings\n")
+    
+    success = 0
+    for idx, (comp_id, component_id, bbox, image_path) in enumerate(components, 1):
+        print(f"  [{idx}/{len(components)}] {component_id}...", end=" ")
         
-        if limit:
-            query += f" LIMIT {limit}"
+        if not Path(image_path).exists():
+            print("Image not found")
+            continue
         
-        cur.execute(query)
-        projects = cur.fetchall()
-    
-    if len(projects) == 0:
-        print("\nAll projects already have component metadata!")
-        db.close()
-        return
-    
-    total_projects = len(projects)
-    total_pending_images = sum(p[3] for p in projects)
-    
-    print(f"  -> Found {total_projects} projects with {total_pending_images} images to process")
-    print(f"  -> This allows resume if crashed!\n")
-    
-    # Process each project
-    print(" [Step 3] Processing projects...\n")
-    print("-" * 60)
-    
-    overall_success = 0
-    overall_errors = 0
-    completed_projects = 0
-    
-    for proj_idx, (project_id, title, total_imgs, pending_imgs) in enumerate(projects, 1):
-        print(f"\nPROJECT [{proj_idx}/{total_projects}]: {title}")
-        print(f"   Total images: {total_imgs} | Pending: {pending_imgs}")
-        print("-" * 60)
-        
-        # Get images for this project
-        with db.conn.cursor() as cur:
-            cur.execute("""
-                SELECT id, image_path, image_name
-                FROM project_images
-                WHERE project_id = %s AND components_metadata IS NULL
-                ORDER BY id
-            """, (project_id,))
-            images = cur.fetchall()
-        
-        project_success = 0
-        project_errors = 0
-        
-        # Process each image in this project
-        for img_idx, (img_id, path_str, img_name) in enumerate(images, 1):
-            path = Path(path_str)
+        try:
+            # Load image
+            img = Image.open(image_path).convert("RGB")
             
-            print(f"   [{img_idx}/{len(images)}] {img_name}...", end=" ")
+            # If we have bbox, crop the component
+            if bbox:
+                x, y, w, h = bbox.get('x', 0), bbox.get('y', 0), bbox.get('w', img.width), bbox.get('h', img.height)
+                cropped = img.crop((x, y, x + w, y + h))
+            else:
+                cropped = img
             
-            if not path.exists():
-                print(f"File not found")
-                project_errors += 1
-                continue
+            # Generate embedding
+            embedding = embedder.embed_image(cropped)
+            embedding_list = embedding.tolist() if hasattr(embedding, 'tolist') else list(embedding)
             
-            try:
-                # Detect components
-                components = detector.detect(str(path))
-                
-                # Build metadata
-                metadata = build_components_metadata(components)
-                json_meta = metadata_to_json(metadata)
-                
-                # Update database for this image
-                with db.conn.cursor() as cur:
-                    cur.execute("""
-                        UPDATE project_images 
-                        SET components_metadata = %s 
-                        WHERE id = %s
-                    """, (json_meta, img_id))
-                
-                # 3. Generate Embeddings & Save to project_component_embeddings
-                # Generate embeddings for all components
-                components = embedder.embed_components(str(path), components)
-                
-                with db.conn.cursor() as cur:
-                    # Clear old embeddings for this image first (to avoid duplicates if re-running)
-                    cur.execute("DELETE FROM project_component_embeddings WHERE image_id = %s", (img_id,))
-                    
-                    # Insert new embeddings
-                    for idx, comp in enumerate(components):
-                        bbox = comp.get('bbox', [0, 0, 0, 0])
-                        # Calculate area ratio if possible, else 0
-                        # Assuming image size available, but if not easily accessible here, we skip or approximate
-                        # We have img_w, img_h in detector but here we iterate. 
-                        # detector.detect returns dicts. embedder.embed_components needs image path to load image anyway.
-                        # Let's trust embedder populated embedding.
-                        
-                        cur.execute("""
-                            INSERT INTO project_component_embeddings (
-                                project_id, image_id,
-                                component_type, component_index,
-                                bbox, bbox_norm,
-                                embedding, confidence
-                            ) VALUES (
-                                %s, %s,
-                                %s, %s,
-                                %s::jsonb, %s::jsonb,
-                                %s::vector, %s
-                            )
-                        """, (
-                            project_id, 
-                            img_id,
-                            comp.get('semantic_type', 'unknown'),
-                            idx,
-                            json.dumps(comp.get('bbox')),
-                            json.dumps(comp.get('bbox_norm')),
-                            comp.get('embedding'), # List of 512 floats
-                            comp.get('confidence', 1.0)
-                        ))
-                
-                # Commit immediately after each image (safety)
-                db.conn.commit()
-                
-                # Log summary
-                type_counts = {k: v['count'] for k, v in metadata.get('by_type', {}).items()}
-                print(f"✓ {len(components)} components: {type_counts}")
-                
-                project_success += 1
-                
-            except Exception as e:
-                print(f"Error: {str(e)[:50]}")
-                project_errors += 1
-                db.conn.rollback()
-        
-        # Project completed - show summary
-        overall_success += project_success
-        overall_errors += project_errors
-        completed_projects += 1
-        
-        print(f"\n   Project complete: {project_success} success, {project_errors} errors")
-        print(f"   Changes committed to database")
-        print("-" * 60)
+            # Update database
+            with db.conn.cursor() as cur:
+                cur.execute("""
+                    UPDATE components SET embedding = %s::vector WHERE id = %s
+                """, (embedding_list, comp_id))
+            
+            db.conn.commit()
+            print("✓")
+            success += 1
+            
+        except Exception as e:
+            print(f"Error: {str(e)[:40]}")
+            db.conn.rollback()
     
-    # Final Summary
-    print("\n" + "="*60)
-    print(" FINAL SUMMARY")
-    print("="*60)
-    print(f"Completed projects: {completed_projects}/{total_projects}")
-    print(f"Successful images: {overall_success}")
-    print(f"Failed images: {overall_errors}")
-    print(f"Total processed: {overall_success + overall_errors}")
-    print("\nAll changes saved to database!")
-    print("Safe to resume if interrupted")
-    print("\n[DONE] Component metadata updated!\n")
-    
+    print(f"\n[DONE] Generated {success}/{len(components)} embeddings\n")
     db.close()
-
 
 
 if __name__ == "__main__":
-    # Check command line arguments
-    if len(sys.argv) > 1 and sys.argv[1] == "update-components":
-        update_component_metadata()
+    if len(sys.argv) > 1 and sys.argv[1] == "embeddings":
+        generate_component_embeddings()
     else:
         main()
-

@@ -16,6 +16,24 @@ from src.component_detector import UIComponentDetector
 from src.component_embedder import ComponentEmbedder
 
 
+def resize_for_detection(img_path, max_size=1024):
+    """Resize image for faster detection (2-3x speedup)"""
+    img = cv2.imread(img_path)
+    h, w = img.shape[:2]
+    
+    if max(h, w) > max_size:
+        scale = max_size / max(h, w)
+        new_w, new_h = int(w * scale), int(h * scale)
+        resized = cv2.resize(img, (new_w, new_h))
+        
+        # Save temp file
+        temp_path = 'temp_detect.jpg'
+        cv2.imwrite(temp_path, resized)
+        return temp_path, scale
+    
+    return img_path, 1.0
+
+
 def create_comparison_image(query_path, matches_data, output_path="demo_visual_output.jpg"):
     """
     Tạo ảnh comparison ĐƠNG GIẢN - chỉ component quan trọng
